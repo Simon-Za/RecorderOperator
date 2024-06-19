@@ -1,0 +1,12 @@
+{
+    "listener": [
+        "initRecorder",
+        "processRecording",
+        "prepareRecording"
+    ],
+    "express": {
+        "useNetwork": false,
+        "port": 2000,
+        "networkAdapter": "Ethernet"
+    }
+}
