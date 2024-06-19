@@ -30,7 +30,7 @@ export const useclientStore = defineStore({
       console.log(receive)
 
       if (receive.eventName === "ON_INIT_SUPERVISOR") {
-
+        this.recorder = receive.data.Proxy
       }
       if (receive.eventName === "UPDATE_RECORDER") {
         this.recorder = receive.data.Proxy
@@ -39,6 +39,6 @@ export const useclientStore = defineStore({
 
   },
   getters: {
-
+    Recorder: (state) => state.recorder
   }
 })

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import { onBeforeUnmount, onMounted } from 'vue';
+import { onBeforeMount, onBeforeUnmount, onMounted } from 'vue';
 import { useWebSocketStore } from './extensions/athaeck-websocket-vue3-extension/stores/webSocket';
 import NotificationComponent from './extensions/notifications/components/NotificationComponent.vue';
 import { SendEvent } from './extensions/athaeck-websocket-vue3-extension/helper/types';
@@ -8,11 +8,13 @@ import { SendEvent } from './extensions/athaeck-websocket-vue3-extension/helper/
 const socketStore = useWebSocketStore()
 
 onMounted(() => {
+
+
+})
+
+onBeforeMount(() => {
   console.log("created")
   socketStore.Connect()
-
-  const initEvent: SendEvent = new SendEvent("INIT_SUPERVISOR")
-  socketStore.SendEvent(initEvent)
 })
 
 onBeforeUnmount(() => {

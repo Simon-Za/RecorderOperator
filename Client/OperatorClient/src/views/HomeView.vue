@@ -8,9 +8,11 @@ import bus from '@/hooks';
 import { ConnectingMindsEvents } from '@/types/Connecting-Minds-Data-Types/types';
 import type { NotificationItem } from '@/extensions/notifications/types';
 import { onBeforeMount } from 'vue';
+import { useclientStore } from '@/stores/client';
 
 
 const socketStore = useWebSocketStore()
+const clientStore = useclientStore()
 // const notificationStore = useNotificationStore()
 // const router = useRouter()
 
@@ -21,14 +23,25 @@ const socketStore = useWebSocketStore()
 // const sessionIdIsValid = computed(() => {
 //   return sessionID.value.length > 0
 // })
+
+const recorder = computed(() => {
+  return clientStore.Recorder
+})
+
 onUnmounted(() => {
-  // bus.off("TAKE_MESSAGE", (body: any) => { })
+  bus.off("SOCKET_OPENED", (body: any) => { })
 })
 onMounted(() => {
-
+  // const initEvent: SendEvent = new SendEvent("INIT_SUPERVISOR")
+  // socketStore.SendEvent(initEvent)
 
 });
 onBeforeMount(() => {
+  bus.on("SOCKET_OPENED", (body: any) => {
+    console.log("happened")
+    const initEvent: SendEvent = new SendEvent("INIT_SUPERVISOR")
+    socketStore.SendEvent(initEvent)
+  })
   // bus.on("TAKE_MESSAGE", (body: any) => {
   //   const data: SendEvent = body as SendEvent;
   //   console.log(data)
@@ -77,6 +90,14 @@ onBeforeMount(() => {
         </div>
       </div>
     </div> -->
+    <div class="top-content">
+      <div>
+
+      </div>
+      <div>
+
+      </div>
+    </div>
   </div>
 </template>
 
