@@ -4,7 +4,7 @@ import { RecorderOperator } from './../../index';
 import { OperatorHooks } from "../hooks/operatorHooks";
 import { ReceivedEvent } from "../../athaeck-websocket-express-base/base/helper";
 import { Free3DKeys } from "../types/keys";
-import { PrepareRecordProxy, RecordProxy } from "../types/proxy";
+import { PrepareRecordProxy, RecordProxy, RecorderProxy } from "../types/proxy";
 
 
 export class Recorder {
@@ -68,5 +68,10 @@ export class Recorder {
     public get Type(): string {
         return this._type
     }
+    public get RecorderData(): RecorderProxy {
+        return {
+            Type: this._type,
+            State: this._state
+        }
+    }
 }
-

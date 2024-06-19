@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import bus from '@/hooks/index'
 import { SendEvent } from '@/extensions/athaeck-websocket-vue3-extension/helper/types'
-import type { SessionData } from '@/types'
+import type { RecorderProxy, SessionData } from '@/types'
 import { useWebSocketStore } from '@/extensions/athaeck-websocket-vue3-extension/stores/webSocket'
 import router from '@/router'
 
@@ -12,7 +12,7 @@ import router from '@/router'
 export const useclientStore = defineStore({
   id: 'client',
   state: () => ({
-
+    recorder: null as RecorderProxy[] | null
   }),
   actions: {
     Init(): void {
@@ -29,8 +29,12 @@ export const useclientStore = defineStore({
 
       console.log(receive)
 
+      if (receive.eventName === "ON_INIT_SUPERVISOR") {
 
-
+      }
+      if (receive.eventName === "UPDATE_RECORDER") {
+        this.recorder = receive.data.Proxy
+      }
     },
 
   },

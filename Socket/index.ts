@@ -24,6 +24,9 @@ export class RecorderOperator extends BaseWebSocketExpressAdoon {
     public get Hooks(): OperatorHooks {
         return this._operatorHooks
     }
+    public get Recorder(): Recorder[] {
+        return this._recorder
+    }
 
     protected ValidateConnection(webSocket: WebSocket): boolean {
         return true

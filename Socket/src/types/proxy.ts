@@ -4,3 +4,8 @@ export type PrepareRecordProxy = {
 export type RecordProxy = {
     FileName: string
 }
+
+export type RecorderProxy = {
+    State: string,
+    Type: string
+}

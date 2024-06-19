@@ -2,7 +2,9 @@
     "listener": [
         "initRecorder",
         "processRecording",
-        "prepareRecording"
+        "prepareRecording",
+        "startRecording",
+        "initSupervisor"
     ],
     "express": {
         "useNetwork": false,

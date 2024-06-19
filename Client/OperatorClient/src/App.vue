@@ -3,12 +3,16 @@
 import { onBeforeUnmount, onMounted } from 'vue';
 import { useWebSocketStore } from './extensions/athaeck-websocket-vue3-extension/stores/webSocket';
 import NotificationComponent from './extensions/notifications/components/NotificationComponent.vue';
+import { SendEvent } from './extensions/athaeck-websocket-vue3-extension/helper/types';
 
 const socketStore = useWebSocketStore()
 
 onMounted(() => {
   console.log("created")
   socketStore.Connect()
+
+  const initEvent: SendEvent = new SendEvent("INIT_SUPERVISOR")
+  socketStore.SendEvent(initEvent)
 })
 
 onBeforeUnmount(() => {

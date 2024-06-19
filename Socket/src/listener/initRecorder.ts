@@ -32,6 +32,7 @@ class InitRecorder extends BaseWebSocketListener {
         this.webSocketHooks.UnSubscribeListener(RecorderHooks.CREATE_RECORDER, this.OnCreateRecorder.bind(this))
     }
     protected listener(body: TRecorder): void {
+        console.log(body)
         const type: string = body.Type
 
         if (this._recorder !== null) {

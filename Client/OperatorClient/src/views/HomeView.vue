@@ -10,7 +10,7 @@ import type { NotificationItem } from '@/extensions/notifications/types';
 import { onBeforeMount } from 'vue';
 
 
-// const socketStore = useWebSocketStore()
+const socketStore = useWebSocketStore()
 // const notificationStore = useNotificationStore()
 // const router = useRouter()
 
