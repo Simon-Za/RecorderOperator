@@ -1,4 +1,5 @@
 export type RecorderProxy = {
     State: string,
-    Type: string
+    Type: string,
+    ID: string
 }

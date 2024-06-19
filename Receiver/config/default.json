@@ -4,6 +4,7 @@
         "port": "8080"
     },
     "azureKinect": {
-        "type": ""
+        "type": "",
+        "id": ""
     }
 }

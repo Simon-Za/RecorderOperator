@@ -13,11 +13,13 @@ export class Recorder {
 
     private _state: string
     private _type: string;
+    private _id: string
 
-    constructor(socket: WebSocket, hooks: RecorderHooks, type: string) {
+    constructor(socket: WebSocket, hooks: RecorderHooks, type: string, id: string) {
         this._socket = socket
         this._hooks = hooks
         this._type = type
+        this._id = id
         this._state = "IDLE"
     }
 
@@ -71,7 +73,8 @@ export class Recorder {
     public get RecorderData(): RecorderProxy {
         return {
             Type: this._type,
-            State: this._state
+            State: this._state,
+            ID: this._id
         }
     }
 }

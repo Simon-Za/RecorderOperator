@@ -57,9 +57,9 @@ export class RecorderOperator extends BaseWebSocketExpressAdoon {
         this.app.use(bodyParser.json());
     }
 
-    public CreateRecorder(type: string, webSocket: WebSocket, hooks: RecorderHooks) {
+    public CreateRecorder(type: string, id: string, webSocket: WebSocket, hooks: RecorderHooks) {
 
-        const recorder: Recorder = new Recorder(webSocket, hooks, type);
+        const recorder: Recorder = new Recorder(webSocket, hooks, type, id);
         recorder.TakeOperator(this)
         hooks.DispatchHook(RecorderHooks.CREATE_RECORDER, recorder)
 

@@ -1,7 +1,8 @@
 
 
 export type TRecorder = {
-    Type: string  //Master, Sub
+    Type: string,  //Master, Sub
+    ID: string
 }
 export type RecordingState = {
     State: string

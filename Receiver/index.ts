@@ -34,6 +34,7 @@ ws.on('open', () => {
 
     const connect: ReceivedEvent = new ReceivedEvent("INIT_RECORDER")
     connect.addData("Type", azureKinect.type)
+    connect.addData("ID", azureKinect.id)
 
     ws.send(connect.JSONString)
 });

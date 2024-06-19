@@ -34,6 +34,7 @@ class InitRecorder extends BaseWebSocketListener {
     protected listener(body: TRecorder): void {
         console.log(body)
         const type: string = body.Type
+        const id: string = body.ID
 
         if (this._recorder !== null) {
             console.log("Recorder wurde bereits aktiviert.")
@@ -45,7 +46,7 @@ class InitRecorder extends BaseWebSocketListener {
             return
         }
 
-        this._operator?.CreateRecorder(type, this.webSocket, this.webSocketHooks)
+        this._operator?.CreateRecorder(type, id, this.webSocket, this.webSocketHooks)
     }
 
 }

@@ -77,157 +77,52 @@ onBeforeMount(() => {
 
 <template>
   <div id="HomeView">
-
-    <!-- <div class="content">
-      <div class="game-container">
-        <div class="header-section">
-          <h1>Willkommen bei Connecting Minds</h1>
-          <p>WATCHER</p>
-          <div class="input-wrapper"><v-text-field v-model="sessionID" label="Session ID" placeholder="1234"
-              class="sessionIDInput"></v-text-field></div>
-
-          <button :disabled="!sessionIdIsValid" @click="joinSession" class="control-button">Session Beitreten</button>
-        </div>
-      </div>
-    </div> -->
     <div class="top-content">
-      <div>
+      <div class="flex-container">
+        <v-card class="" elevation="2">
+          <v-card-item>
+            <v-card-title>
+              Übersicht der Recorder
+            </v-card-title>
 
+            <v-card-subtitle>
+
+            </v-card-subtitle>
+          </v-card-item>
+
+          <v-card-text>
+
+          </v-card-text>
+        </v-card>
       </div>
-      <div>
-
+      <div class="flex-container">
+        <v-card class="" elevation="2" v-for="(item, index) in recorder" :key="index">
+          <v-card-item class="card-header">
+            <v-card-title>
+              ID: {{ item.Type }} {{ item.ID }}
+            </v-card-title>
+            <v-card-subtitle>
+              STATUS: {{ item.State }}
+            </v-card-subtitle>
+          </v-card-item>
+        </v-card>
       </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-.input-wrapper {
-  margin-top: 21px;
-}
-
-.header-section h1 {
-  color: white;
-}
-
-.header-section p {
-  color: white;
-}
-
 #HomeView {
-  padding: 10%;
-
-}
-
-.game-container {
-  width: 100%;
-  background-color: transparent;
-  backdrop-filter: blur(10px);
-  border-radius: 10px;
-  padding: 4% 20%;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-
-
-.sessionIDInput {
   width: 100%;
 }
 
-.footer {
-  text-align: center;
-  margin-bottom: 20px;
-  padding: 10px;
-  border-radius: 10px;
-  background-color: #1f1f1f;
-}
-
-.custom-card {
-  background-color: #3d898d;
-
-}
-
-.custom-card {
-  background-color: transparent;
-
-  color: white;
-
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.custom-dialog-btn {
-
-  color: #fff;
-  padding: 10px 20px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  animation: pulse 5s infinite;
-  background-image: url('@/assets/button_image.png');
-  background-size: cover;
-  background-position: center;
-  height: 200px;
-  width: 200px;
-
-}
-
-.control-button {
-  color: #ffffff;
-  padding: 14px 28px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  animation: pulse 5s infinite;
-  background-image: url('@/assets/button_image.png');
-  background-size: cover;
-  background-position: center;
-  width: 150px;
-  color: #fff;
-  cursor: pointer;
-}
-
-.control-button:disabled {
-  filter: grayscale(100%) !important;
-  animation: none;
-  cursor: not-allowed;
-}
-
-
-.text-h5 {
-  color: orange;
-}
-
-.dialog-actions {
+.top-content {
+  padding: 50px 0;
   display: flex;
-  justify-content: flex-end;
 }
 
-.disagree-button,
-.agree-button {
-
-  color: white !important;
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
-  margin-left: 10px;
-}
-
-.disagree-button:hover,
-.agree-button:hover {
-  color: white;
-}
-
-
-@keyframes pulse {
-  0% {
-    transform: scale(1);
-  }
-
-  50% {
-    transform: scale(1.1);
-  }
-
-  100% {
-    transform: scale(1);
-  }
+.flex-container {
+  padding: 0 21px;
+  width: 100%;
 }
 </style>
