@@ -39,6 +39,26 @@ export const useclientStore = defineStore({
 
   },
   getters: {
-    Recorder: (state) => state.recorder
+    Recorder: (state) => state.recorder,
+    HasMaster(state) {
+      const master: RecorderProxy | undefined = state.recorder?.find(r => r.Type === "Master")
+      return master !== undefined
+    },
+    IsAbleToPrepare(state) {
+      if (state.recorder === null) {
+        return false
+      }
+      for (const element of state.recorder) {
+        if (element.Type === 'Sub') {
+          if (element.State === 'Waiting' || element.State === 'Recording') {
+            return false;
+          }
+          if (!element.State.includes('Idle')) {
+            return false;
+          }
+        }
+      }
+      return true;
+    }
   }
 })

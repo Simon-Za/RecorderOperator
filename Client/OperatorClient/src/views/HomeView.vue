@@ -27,6 +27,12 @@ const clientStore = useclientStore()
 const recorder = computed(() => {
   return clientStore.Recorder
 })
+const hasMaster = computed(() => {
+  return clientStore.HasMaster
+})
+const canPrepare = computed(() => {
+  return clientStore.IsAbleToPrepare
+})
 
 onUnmounted(() => {
   bus.off("SOCKET_OPENED", (body: any) => { })
@@ -71,7 +77,12 @@ onBeforeMount(() => {
 //   socketStore.SendEvent(joinSessionEvent);
 // }
 
+function TriggerRecord() {
 
+}
+function PrepareRecord() {
+
+}
 
 </script>
 
@@ -82,16 +93,21 @@ onBeforeMount(() => {
         <v-card class="" elevation="2">
           <v-card-item>
             <v-card-title>
-              Übersicht der Recorder
+              Übersicht der Recorder:
             </v-card-title>
-
-            <v-card-subtitle>
-
-            </v-card-subtitle>
           </v-card-item>
 
           <v-card-text>
-
+            <div>
+              Actions:
+            </div>
+            <div class="flex">
+              <v-btn :disabled="!canPrepare" title="Wenn alle Subs auf Idle sind, kann die Aufnahme vorbereitet werden."
+                @click="PrepareRecord">Aufnahme vorbereiten</v-btn>
+              <v-btn style="cursor: pointer;"
+                title="Wenn als Subs auf Waiting sind und der Master auf Idle, kann aufgneommen werden."
+                @click="TriggerRecord" :disabled="!hasMaster">Aufnahme starten</v-btn>
+            </div>
           </v-card-text>
         </v-card>
       </div>
@@ -124,5 +140,10 @@ onBeforeMount(() => {
 .flex-container {
   padding: 0 21px;
   width: 100%;
+}
+
+.flex {
+  display: flex;
+  justify-content: space-between;
 }
 </style>

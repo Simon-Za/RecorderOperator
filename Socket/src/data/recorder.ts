@@ -20,7 +20,7 @@ export class Recorder {
         this._hooks = hooks
         this._type = type
         this._id = id
-        this._state = "IDLE"
+        this._state = "Idle"
     }
 
     public get Socket(): WebSocket {
