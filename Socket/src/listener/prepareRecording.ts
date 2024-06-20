@@ -47,7 +47,6 @@ class PrepareRecording extends BaseWebSocketListener {
         this._operator?.Hooks.UnSubscribeListener(OperatorHooks.UPDATE_RECORDER, this.OnUpdateRecorder.bind(this))
     }
     protected listener(body: TPrepareRecord): void {
-        console.log(body)
         const fileName: string = body.FileName
 
         if (!this._isIdle) {

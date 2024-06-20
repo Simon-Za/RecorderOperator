@@ -48,8 +48,6 @@ class InitSupervisor extends BaseWebSocketListener {
         this.listenerKey = Free3DKeys.INIT_SUPERVISOR
     }
     public OnDisconnection(webSocket: WebSocket, hooks: WebSocketHooks): void {
-        console.log("hit")
-        console.log(this._operator)
         this._operator?.Hooks.UnSubscribeListener(OperatorHooks.UPDATE_RECORDER, this.OnUpdateRecorder.bind(this))
         this._operator?.Hooks.UnSubscribeListener(OperatorHooks.FINISH, this.OnFinish.bind(this))
     }

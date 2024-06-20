@@ -48,7 +48,6 @@ class StartRecording extends BaseWebSocketListener {
         this.listenerKey = Free3DKeys.TRIGGER_RECORD
     }
     public OnDisconnection(webSocket: WebSocket, hooks: WebSocketHooks): void {
-        console.log("hit2")
         this._operator?.Hooks.UnSubscribeListener(OperatorHooks.UPDATE_RECORDER, this.OnUpdateRecorder.bind(this))
     }
     protected listener(body: TPrepareRecord): void {

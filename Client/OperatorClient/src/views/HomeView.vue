@@ -33,7 +33,7 @@ const isInPreparation = computed(() => {
 })
 
 onUnmounted(() => {
-  bus.off("SOCKET_OPENED", OnSocketOpened)
+  bus.off("SOCKET_OPENED", OnSocketOpened);
   bus.off("TAKE_MESSAGE", OnTakeMessage)
 })
 onMounted(() => {
@@ -45,8 +45,7 @@ onBeforeMount(() => {
   bus.on("TAKE_MESSAGE", OnTakeMessage)
 })
 
-function OnTakeMessage(body: SendEvent) {
-  console.log(body)
+function OnTakeMessage(body: any) {
   if (body.eventName === "ON_FINISH_RECORD") {
     dataName.value = ""
   }
