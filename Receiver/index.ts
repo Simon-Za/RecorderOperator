@@ -98,7 +98,7 @@ recorderHooks.SubscribeHookListener("ON_TRIGGER_RECORD", (body) => {
         finished.addData("State", "Idle")
         ws.send(finished.JSONString)
 
-        const reset: ReceivedEvent = new ReceivedEvent("FINISH_RECORDING")
+        const reset: ReceivedEvent = new ReceivedEvent("FINISH_RECORD")
         ws.send(reset.JSONString)
 
     }, timeToWait)

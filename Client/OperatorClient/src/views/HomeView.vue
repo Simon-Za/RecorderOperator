@@ -46,6 +46,7 @@ onBeforeMount(() => {
 })
 
 function OnTakeMessage(body: any) {
+  console.log(body.eventName)
   if (body.eventName === "ON_FINISH_RECORD") {
     dataName.value = ""
   }
@@ -106,7 +107,7 @@ function PrepareRecord() {
         </v-card>
       </div>
       <div class="flex-container">
-        <v-card class="" elevation="2" v-for="(item, index) in recorder" :key="index">
+        <v-card class="recorder-item" elevation="2" v-for="(item, index) in recorder" :key="index">
           <v-card-item class="card-header">
             <v-card-title>
               ID: {{ item.Type }} {{ item.ID }}
@@ -139,5 +140,9 @@ function PrepareRecord() {
 .flex {
   display: flex;
   justify-content: space-between;
+}
+
+.recorder-item {
+  margin-bottom: 14px;
 }
 </style>
