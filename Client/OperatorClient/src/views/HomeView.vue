@@ -45,13 +45,14 @@ onBeforeMount(() => {
   bus.on("TAKE_MESSAGE", OnTakeMessage)
 })
 
-function OnTakeMessage(body: SendEvent): void {
+function OnTakeMessage(body: SendEvent) {
+  console.log(body)
   if (body.eventName === "ON_FINISH_RECORD") {
     dataName.value = ""
   }
 }
 
-function OnSocketOpened(body: any): void {
+function OnSocketOpened(body: any) {
   console.log("happened")
   const initEvent: SendEvent = new SendEvent("INIT_SUPERVISOR")
   socketStore.SendEvent(initEvent)

@@ -48,7 +48,13 @@ export class RecorderOperator extends BaseWebSocketExpressAdoon {
             this.UpdateRecorder();
         }
 
-        return recorder?.Hooks;
+        let hooks: WebSocketHooks | undefined = recorder?.Hooks;
+
+        if (hooks === undefined) {
+            hooks = this._operatorHooks
+        }
+
+        return hooks
     }
     AddRoute(route: BaseExpressRoute): void {
         this.app = AddRoute(this.app, route);

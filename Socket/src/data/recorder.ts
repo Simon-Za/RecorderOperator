@@ -53,6 +53,7 @@ export class Recorder {
     }
 
     public RemoveOperator(operator: RecorderOperator): void {
+        // console
         if (this._type === "Sub") {
             operator.Hooks.UnSubscribeListener(OperatorHooks.PREPARE_RECORDING, this.OnPrepareRecording.bind(this))
         }
