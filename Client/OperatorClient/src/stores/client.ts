@@ -2,10 +2,6 @@ import { defineStore } from 'pinia'
 import bus from '@/hooks/index'
 import { SendEvent } from '@/extensions/athaeck-websocket-vue3-extension/helper/types'
 import type { RecorderProxy, SessionData } from '@/types'
-import { useWebSocketStore } from '@/extensions/athaeck-websocket-vue3-extension/stores/webSocket'
-import router from '@/router'
-
-
 
 
 
@@ -24,7 +20,6 @@ export const useclientStore = defineStore({
 
     },
     _OnTakeMesage(body: any) {
-      const webSocketStore = useWebSocketStore()
       const receive: SendEvent = <SendEvent>body
 
       console.log(receive)

@@ -6,7 +6,6 @@ import { RecorderOperator } from "../..";
 import { RecorderHooks } from "../hooks/recorderHooks";
 import { Free3DKeys } from "../types/keys";
 import { Recorder } from "../data/recorder";
-import { OperatorHooks } from "../hooks/operatorHooks";
 
 
 class ProcessRecording extends BaseWebSocketListener {

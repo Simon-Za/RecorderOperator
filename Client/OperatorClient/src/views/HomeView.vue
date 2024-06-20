@@ -21,8 +21,8 @@ const recorder = computed(() => {
   return clientStore.Recorder
 })
 const hasMaster = computed(() => {
-  // return clientStore.HasMaster
-  return true
+  return clientStore.HasMaster
+  // return true
 })
 const canPrepare = computed(() => {
   return clientStore.IsAbleToPrepare
