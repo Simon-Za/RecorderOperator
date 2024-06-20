@@ -5,6 +5,10 @@ import { EventEmitter } from "events"
 
 const socket: any = config.get("socket")
 const azureKinect: any = config.get("azureKinect")
+const timer: any = config.get("timer")
+
+const timeToWait: number = timer.factor * timer.time
+
 const url: string = `ws://${socket.host}:${socket.port}`
 const ws = new WebSocket(url);
 
@@ -55,7 +59,7 @@ recorderHooks.SubscribeHookListener("ON_PREPARE_RECORD", (body: any) => {
     const command = baseCommand
         .replace("{{fileName}}", fileName)
         .replace("{{sdkPath}}", `"${sdkPath}"`)
-        .replace("{{folderPath}}", `"${folderPath}"`)
+        .replace("{{folderPath}}", `${folderPath}`)
         .replaceAll("/", "\\");
 
 
@@ -66,7 +70,40 @@ recorderHooks.SubscribeHookListener("ON_PREPARE_RECORD", (body: any) => {
     ws.send(waitingEvent.JSONString)
 })
 
+recorderHooks.SubscribeHookListener("ON_TRIGGER_RECORD", (body) => {
+    const fileName: string = body.Proxy.FileName + azureKinect.type + azureKinect.id
 
+    const type: string = azureKinect.type
+    if (type === "Master") {
+        const sdkPath: string = azureKinect.sdkPath
+        const folderPath: string = azureKinect.folderPath
+        const baseCommand: string = azureKinect.baseCommand
+
+        const command = baseCommand
+            .replace("{{fileName}}", fileName)
+            .replace("{{sdkPath}}", `"${sdkPath}"`)
+            .replace("{{folderPath}}", `${folderPath}`)
+            .replaceAll("/", "\\");
+
+
+        executeCommand(command)
+    }
+    const waitingEvent: ReceivedEvent = new ReceivedEvent("PROCESS_RECORDING")
+    waitingEvent.addData("State", "Recording")
+    ws.send(waitingEvent.JSONString)
+
+
+    setTimeout(() => {
+        const finished: ReceivedEvent = new ReceivedEvent("PROCESS_RECORDING")
+        finished.addData("State", "Idle")
+        ws.send(finished.JSONString)
+
+        const reset: ReceivedEvent = new ReceivedEvent("FINISH_RECORDING")
+        ws.send(reset.JSONString)
+
+    }, timeToWait)
+
+})
 
 
 ws.on('open', () => {

@@ -21,7 +21,8 @@ const recorder = computed(() => {
   return clientStore.Recorder
 })
 const hasMaster = computed(() => {
-  return clientStore.HasMaster
+  // return clientStore.HasMaster
+  return true
 })
 const canPrepare = computed(() => {
   return clientStore.IsAbleToPrepare
@@ -32,22 +33,29 @@ const isInPreparation = computed(() => {
 })
 
 onUnmounted(() => {
-  bus.off("SOCKET_OPENED", (body: any) => { })
+  bus.off("SOCKET_OPENED", OnSocketOpened)
+  bus.off("TAKE_MESSAGE", OnTakeMessage)
 })
 onMounted(() => {
 
 
 });
 onBeforeMount(() => {
-  bus.on("SOCKET_OPENED", (body: any) => {
-    console.log("happened")
-    const initEvent: SendEvent = new SendEvent("INIT_SUPERVISOR")
-    socketStore.SendEvent(initEvent)
-  })
-
+  bus.on("SOCKET_OPENED", OnSocketOpened)
+  bus.on("TAKE_MESSAGE", OnTakeMessage)
 })
 
+function OnTakeMessage(body: SendEvent): void {
+  if (body.eventName === "ON_FINISH_RECORD") {
+    dataName.value = ""
+  }
+}
 
+function OnSocketOpened(body: any): void {
+  console.log("happened")
+  const initEvent: SendEvent = new SendEvent("INIT_SUPERVISOR")
+  socketStore.SendEvent(initEvent)
+}
 function TriggerRecord() {
   if (dataName.value.length === 0) {
     return

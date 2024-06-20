@@ -9,5 +9,9 @@
         "sdkPath": "",
         "folderPath": "",
         "baseCommand": ""
+    },
+    "timer": {
+        "time": "15",
+        "factor": "1000"
     }
 }

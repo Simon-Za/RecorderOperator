@@ -4,7 +4,8 @@
         "processRecording",
         "prepareRecording",
         "startRecording",
-        "initSupervisor"
+        "initSupervisor",
+        "finishRecording"
     ],
     "express": {
         "useNetwork": false,

@@ -21,6 +21,7 @@ class InitSupervisor extends BaseWebSocketListener {
         this._operator = this.webSocketServer as RecorderOperator
 
         this._operator.Hooks.SubscribeHookListener(OperatorHooks.UPDATE_RECORDER, this.OnUpdateRecorder.bind(this))
+        this._operator.Hooks.SubscribeHookListener(OperatorHooks.FINISH, this.OnFinish.bind(this))
     }
 
     private OnUpdateRecorder(recorder: Recorder[]): void {
@@ -28,6 +29,10 @@ class InitSupervisor extends BaseWebSocketListener {
         const takeRecorder: ReceivedEvent = new ReceivedEvent(OperatorHooks.UPDATE_RECORDER)
         takeRecorder.addData("Proxy", this.GetRecorderProxy(recorder))
         this.webSocket.send(takeRecorder.JSONString)
+    }
+    private OnFinish(): void {
+        const onFinish: ReceivedEvent = new ReceivedEvent(Free3DKeys.ON_FINISH_RECORD)
+        this.webSocket.send(onFinish.JSONString)
     }
 
     private GetRecorderProxy(recorder: Recorder[]): RecorderProxy[] {
@@ -43,7 +48,8 @@ class InitSupervisor extends BaseWebSocketListener {
         this.listenerKey = Free3DKeys.INIT_SUPERVISOR
     }
     public OnDisconnection(webSocket: WebSocket, hooks: WebSocketHooks): void {
-        this._operator?.Hooks.SubscribeHookListener(OperatorHooks.UPDATE_RECORDER, this.OnUpdateRecorder.bind(this))
+        this._operator?.Hooks.UnSubscribeListener(OperatorHooks.UPDATE_RECORDER, this.OnUpdateRecorder.bind(this))
+        this._operator?.Hooks.UnSubscribeListener(OperatorHooks.FINISH, this.OnFinish.bind(this))
     }
     protected listener(body: any): void {
         const recorder: Recorder[] | undefined = this._operator?.Recorder
