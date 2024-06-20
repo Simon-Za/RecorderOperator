@@ -35,46 +35,57 @@ export const useclientStore = defineStore({
   },
   getters: {
     Recorder: (state) => state.recorder,
-    HasMaster(state) {
-      const master: RecorderProxy | undefined = state.recorder?.find(r => r.Type === "Master")
-      return master !== undefined
+    HasRecorder(state) {
+      return this.Recorder !== null && this.Recorder.length > 0
     },
-    IsAbleToPrepare(state) {
-      if (state.recorder === null) {
+    GetSubs(state) {
+      if (!this.HasRecorder) {
+        return []
+      }
+      return state.recorder?.filter(r => r.Type === "Sub")
+    },
+    HasSubs(state) {
+      if (!this.HasRecorder) {
+        return
+      }
+      return this.GetSubs.length > 0
+    },
+    GetMaster(state) {
+      const master: RecorderProxy | undefined = state.recorder?.find(r => r.Type === "Master")
+      return master
+    },
+    HasMaster(state) {
+      return this.GetMaster !== undefined
+    },
+    IsMasterInIdle(state) {
+      if (!this.HasMaster) {
         return false
-      } else {
-        if (state.recorder.length === 0) {
-          return false
-        }
       }
-      for (const element of state.recorder) {
-        if (element.Type === 'Sub') {
-          if (element.State === 'Waiting' || element.State === 'Recording') {
-            return false;
-          }
-          if (!element.State.includes('Idle')) {
-            return false;
-          }
-        }
+      return this.GetMaster?.State === "Idle"
+    },
+    AreSubsReadyToPrepare(state) {
+      if (!this.HasRecorder) {
+        return false
       }
-      return true;
+      return this.GetSubs?.every((s: RecorderProxy) => s.State === "Idle")
+    },
+    AreSubsWaitingOrRecording(state) {
+      if (!this.HasRecorder) {
+        return false
+      }
+      return this.GetSubs?.every((s: RecorderProxy) => s.State === "Recording" || s.State === "Waiting")
     },
     AreSubsWaiting(state) {
-      if (state.recorder === null) {
+      if (!this.HasRecorder) {
         return false
-      } else {
-        if (state.recorder.length === 0) {
-          return false
-        }
       }
-      for (const element of state.recorder) {
-        if (element.Type === 'Sub') {
-          if (element.State !== 'Waiting') {
-            return false;
-          }
-        }
+      return this.GetSubs?.every((s: RecorderProxy) => s.State === "Waiting")
+    },
+    AreAllRecording(state) {
+      if (!this.HasRecorder) {
+        return false
       }
-      return true;
+      return this.Recorder?.every((r: RecorderProxy) => r.State === "Recording")
     }
   }
 })

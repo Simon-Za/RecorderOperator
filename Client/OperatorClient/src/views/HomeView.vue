@@ -20,18 +20,41 @@ const dataName = ref("")
 const recorder = computed(() => {
   return clientStore.Recorder
 })
+const hasRecorder = computed(() => {
+  return clientStore.HasRecorder
+})
+const hasSubs = computed(() => {
+  return clientStore.HasSubs
+})
+const getSubs = computed(() => {
+  return clientStore.GetSubs
+})
+const getMaster = computed(() => {
+  return clientStore.GetMaster
+})
 const hasMaster = computed(() => {
   return clientStore.HasMaster
-  // return true
 })
-const canPrepare = computed(() => {
-  return clientStore.IsAbleToPrepare
+const isMasterInIdle = computed(() => {
+  return clientStore.IsMasterInIdle
 })
-
-const isInPreparation = computed(() => {
+const areSubsReadyToPrepare = computed(() => {
+  return clientStore.AreSubsReadyToPrepare
+})
+const areSubsWaitingOrRecording = computed(() => {
+  return clientStore.AreSubsWaitingOrRecording
+})
+const areSubsWaiting = computed(() => {
   return clientStore.AreSubsWaiting
 })
+const areAllRecording = computed(() => {
+  return clientStore.AreAllRecording
+})
 
+
+const rules = ref({
+  required: (value: string) => !!value || 'Required.'
+})
 onUnmounted(() => {
   bus.off("SOCKET_OPENED", OnSocketOpened);
   bus.off("TAKE_MESSAGE", OnTakeMessage)
@@ -76,6 +99,7 @@ function PrepareRecord() {
   socketStore.SendEvent(prepareRecord)
 }
 
+
 </script>
 
 <template>
@@ -94,14 +118,19 @@ function PrepareRecord() {
               Actions:
             </div>
             <div class="data-name">
-              <v-text-field :disabled="isInPreparation" v-model="dataName" label="Name der Datei"></v-text-field>
+              <v-text-field :rules="[rules.required]" :disabled="areAllRecording || (hasSubs && areSubsWaiting)"
+                v-model="dataName" label="Name der Datei"></v-text-field>
             </div>
             <div class="flex">
-              <v-btn :disabled="!canPrepare" title="Wenn alle Subs auf Idle sind, kann die Aufnahme vorbereitet werden."
+              <v-btn
+                :disabled="dataName.length === 0 || !hasRecorder || !hasSubs || !areSubsReadyToPrepare || areSubsWaitingOrRecording || areAllRecording"
+                title="Wenn alle Subs auf Idle sind, kann die Aufnahme vorbereitet werden."
                 @click="PrepareRecord">Aufnahme vorbereiten</v-btn>
               <v-btn style="cursor: pointer;"
                 title="Wenn als Subs auf Waiting sind und der Master auf Idle, kann aufgneommen werden."
-                @click="TriggerRecord" :disabled="!hasMaster">Aufnahme starten</v-btn>
+                @click="TriggerRecord"
+                :disabled="dataName.length === 0 || !hasRecorder || !hasMaster || !isMasterInIdle || !areSubsWaiting || areAllRecording">Aufnahme
+                starten</v-btn>
             </div>
           </v-card-text>
         </v-card>
