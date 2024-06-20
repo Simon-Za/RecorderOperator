@@ -1,6 +1,13 @@
 import WebSocket from 'ws';
 import { exec } from 'child_process';
 import config from "config"
+import { EventEmitter } from "events"
+
+const socket: any = config.get("socket")
+const azureKinect: any = config.get("azureKinect")
+const url: string = `ws://${socket.host}:${socket.port}`
+const ws = new WebSocket(url);
+
 
 export class ReceivedEvent {
     public eventName: string;
@@ -21,13 +28,46 @@ export class ReceivedEvent {
 
 }
 
-const socket: any = config.get("socket")
-const azureKinect: any = config.get("azureKinect")
-const url: string = `ws://${socket.host}:${socket.port}`
 
-console.log(url)
+class RecorderHooks extends EventEmitter {
 
-const ws = new WebSocket(url);
+
+
+    public DispatchHook(hook: string, body: any) {
+        this.emit(hook, body)
+    }
+    public SubscribeHookListener(hook: string, listener: (data: any) => void) {
+        this.on(hook, listener);
+    }
+    public UnSubscribeListener(hook: string, listener: (data: any) => void) {
+        this.off(hook, listener)
+    }
+}
+
+const recorderHooks: RecorderHooks = new RecorderHooks()
+
+recorderHooks.SubscribeHookListener("ON_PREPARE_RECORD", (body: any) => {
+    const fileName: string = body.Proxy.FileName + azureKinect.type + azureKinect.id
+    const sdkPath: string = azureKinect.sdkPath
+    const folderPath: string = azureKinect.folderPath
+    const baseCommand: string = azureKinect.baseCommand
+
+    const command = baseCommand
+        .replace("{{fileName}}", fileName)
+        .replace("{{sdkPath}}", `"${sdkPath}"`)
+        .replace("{{folderPath}}", `"${folderPath}"`)
+        .replaceAll("/", "\\");
+
+
+    executeCommand(command)
+
+    const waitingEvent: ReceivedEvent = new ReceivedEvent("PROCESS_RECORDING")
+    waitingEvent.addData("State", "Waiting")
+    ws.send(waitingEvent.JSONString)
+})
+
+
+
 
 ws.on('open', () => {
     console.log('Connected to the WebSocket server');
@@ -39,21 +79,24 @@ ws.on('open', () => {
     ws.send(connect.JSONString)
 });
 
+
+
 ws.on('message', (body) => {
-    console.log(`Received message: ${body}`);
     const jsonBody = JSON.parse(body.toString());
     const event = jsonBody.hasOwnProperty("eventName") ? jsonBody["eventName"] : ""
     const data = jsonBody.hasOwnProperty("data") ? jsonBody["data"] : ""
-    // if (event !== "SET_FACTOR" && event !== "MOVE_CLIENT") {
+
     console.log(event)
-    // }
-    ws.emit(event, data)
-    // executeCommand(data.toString());
+    console.log(data)
+
+    recorderHooks.DispatchHook(event, data)
+
 });
 
 
 
 function executeCommand(command: string) {
+    console.log(command)
     exec(command, (error, stdout, stderr) => {
         if (error) {
             console.error(`Error executing command: ${error}`);

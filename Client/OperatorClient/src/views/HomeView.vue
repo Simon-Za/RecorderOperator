@@ -1,28 +1,21 @@
 <script setup lang="ts">
 import { SendEvent } from '@/extensions/athaeck-websocket-vue3-extension/helper/types';
 import { useWebSocketStore } from '@/extensions/athaeck-websocket-vue3-extension/stores/webSocket';
-import { useNotificationStore } from "@/extensions/notifications/stores/index"
+
 import { onMounted, ref, computed, onUnmounted } from 'vue';
-import { useRouter } from 'vue-router';
+
 import bus from '@/hooks';
-import { ConnectingMindsEvents } from '@/types/Connecting-Minds-Data-Types/types';
-import type { NotificationItem } from '@/extensions/notifications/types';
+
 import { onBeforeMount } from 'vue';
 import { useclientStore } from '@/stores/client';
 
 
 const socketStore = useWebSocketStore()
 const clientStore = useclientStore()
-// const notificationStore = useNotificationStore()
-// const router = useRouter()
+
+const dataName = ref("")
 
 
-// const showdialog = ref(false)
-// const sessionID = ref("")
-
-// const sessionIdIsValid = computed(() => {
-//   return sessionID.value.length > 0
-// })
 
 const recorder = computed(() => {
   return clientStore.Recorder
@@ -34,12 +27,15 @@ const canPrepare = computed(() => {
   return clientStore.IsAbleToPrepare
 })
 
+const isInPreparation = computed(() => {
+  return clientStore.AreSubsWaiting
+})
+
 onUnmounted(() => {
   bus.off("SOCKET_OPENED", (body: any) => { })
 })
 onMounted(() => {
-  // const initEvent: SendEvent = new SendEvent("INIT_SUPERVISOR")
-  // socketStore.SendEvent(initEvent)
+
 
 });
 onBeforeMount(() => {
@@ -48,40 +44,27 @@ onBeforeMount(() => {
     const initEvent: SendEvent = new SendEvent("INIT_SUPERVISOR")
     socketStore.SendEvent(initEvent)
   })
-  // bus.on("TAKE_MESSAGE", (body: any) => {
-  //   const data: SendEvent = body as SendEvent;
-  //   console.log(data)
-  //   // if (data.eventName === ConnectingMindsEvents.SESSION_NOT_FOUND) {
 
-  //   // }
-  //   if (data.eventName === ConnectingMindsEvents.SESSION_NOT_FOUND) {
-  //     const notification: NotificationItem = {
-  //       type: "info",
-  //       message: data.data["Messsage"],
-  //       action1: { label: "" }
-  //     }
-  //     notificationStore.SpawnNotification(notification)
-
-  //   }
-
-  // });
 })
 
-// function joinSession() {
-//   if (sessionID.value.length === 0) {
-//     return;
-//   }
-//   const joinSessionEvent: SendEvent = new SendEvent('JOIN_SESSION')
-//   joinSessionEvent.addData("SessionID", sessionID.value)
-//   joinSessionEvent.addData("Type", "WATCHER")
-//   socketStore.SendEvent(joinSessionEvent);
-// }
 
 function TriggerRecord() {
+  if (dataName.value.length === 0) {
+    return
+  }
 
+  const record: SendEvent = new SendEvent("TRIGGER_RECORD")
+  record.addData("FileName", dataName.value)
+  socketStore.SendEvent(record)
 }
 function PrepareRecord() {
+  if (dataName.value.length === 0) {
+    return;
+  }
 
+  const prepareRecord: SendEvent = new SendEvent("PREPARE_RECORD")
+  prepareRecord.addData("FileName", dataName.value)
+  socketStore.SendEvent(prepareRecord)
 }
 
 </script>
@@ -100,6 +83,9 @@ function PrepareRecord() {
           <v-card-text>
             <div>
               Actions:
+            </div>
+            <div class="data-name">
+              <v-text-field :disabled="isInPreparation" v-model="dataName" label="Name der Datei"></v-text-field>
             </div>
             <div class="flex">
               <v-btn :disabled="!canPrepare" title="Wenn alle Subs auf Idle sind, kann die Aufnahme vorbereitet werden."

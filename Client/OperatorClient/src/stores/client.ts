@@ -47,6 +47,10 @@ export const useclientStore = defineStore({
     IsAbleToPrepare(state) {
       if (state.recorder === null) {
         return false
+      } else {
+        if (state.recorder.length === 0) {
+          return false
+        }
       }
       for (const element of state.recorder) {
         if (element.Type === 'Sub') {
@@ -54,6 +58,23 @@ export const useclientStore = defineStore({
             return false;
           }
           if (!element.State.includes('Idle')) {
+            return false;
+          }
+        }
+      }
+      return true;
+    },
+    AreSubsWaiting(state) {
+      if (state.recorder === null) {
+        return false
+      } else {
+        if (state.recorder.length === 0) {
+          return false
+        }
+      }
+      for (const element of state.recorder) {
+        if (element.Type === 'Sub') {
+          if (element.State !== 'Waiting') {
             return false;
           }
         }

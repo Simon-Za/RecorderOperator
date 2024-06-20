@@ -37,6 +37,8 @@ class ProcessRecording extends BaseWebSocketListener {
             return
         }
 
+        console.log(body)
+
         const state: string = body.State
 
         this._recorder.TakeState(state)

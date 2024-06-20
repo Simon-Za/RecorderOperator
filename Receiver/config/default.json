@@ -5,6 +5,9 @@
     },
     "azureKinect": {
         "type": "",
-        "id": ""
+        "id": "",
+        "sdkPath": "",
+        "folderPath": "",
+        "baseCommand": ""
     }
 }
