@@ -14,13 +14,14 @@ class StartRecording extends BaseWebSocketListener {
     listenerKey: string;
     private _operator: RecorderOperator | null = null
     private _isPrepared: boolean = true;
+    private _recorder: Recorder | null = null
 
     constructor(webSocketServer: RecorderOperator, webSocket: WebSocket, webSocketHooks: RecorderHooks) {
         super(webSocketServer, webSocket, webSocketHooks)
 
         this._operator = this.webSocketServer as RecorderOperator
 
-        this._operator?.Hooks.SubscribeHookListener(OperatorHooks.UPDATE_RECORDER, this.OnUpdateRecorder.bind(this))
+        this.webSocketHooks.SubscribeHookListener(RecorderHooks.CREATE_RECORDER, this.OnCreateRecorder.bind(this))
     }
 
     private OnUpdateRecorder(recorder: Recorder[]) {
@@ -43,11 +44,23 @@ class StartRecording extends BaseWebSocketListener {
         // Wenn alle Bedingungen erfüllt sind, gib True zurück
         return true;
     }
+    private OnCreateRecorder(recorder: Recorder): void {
+        this._recorder = recorder
+
+        this._operator?.Hooks.SubscribeHookListener(OperatorHooks.UPDATE_RECORDER, this.OnUpdateRecorder.bind(this))
+    }
+
 
     protected SetKey(): void {
         this.listenerKey = Free3DKeys.TRIGGER_RECORD
     }
     public OnDisconnection(webSocket: WebSocket, hooks: WebSocketHooks): void {
+        this.webSocketHooks.UnSubscribeListener(RecorderHooks.CREATE_RECORDER, this.OnCreateRecorder.bind(this))
+
+        if (this._recorder === null) {
+            return
+        }
+
         this._operator?.Hooks.UnSubscribeListener(OperatorHooks.UPDATE_RECORDER, this.OnUpdateRecorder.bind(this))
     }
     protected listener(body: TPrepareRecord): void {
