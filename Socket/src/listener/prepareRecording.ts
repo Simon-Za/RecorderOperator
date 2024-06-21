@@ -20,10 +20,11 @@ class PrepareRecording extends BaseWebSocketListener {
         super(webSocketServer, webSocket, webSocketHooks)
 
         this._operator = this.webSocketServer as RecorderOperator
-        this.webSocketHooks.SubscribeHookListener(RecorderHooks.CREATE_RECORDER, this.OnCreateRecorder.bind(this))
+        this.webSocketHooks.SubscribeHookListener(RecorderHooks.CREATE_RECORDER, this.OnCreateRecorder)
+        this.webSocketHooks.SubscribeHookListener(RecorderHooks.REMOVE_RECORDER, this.OnRemoveRecorder)
     }
 
-    private OnUpdateRecorder(recorder: Recorder[]) {
+    private OnUpdateRecorder = (recorder: Recorder[]) => {
         this._isIdle = this.ValidateRecorderStates(recorder)
     }
     private ValidateRecorderStates(recorder: Recorder[]): boolean {
@@ -40,22 +41,21 @@ class PrepareRecording extends BaseWebSocketListener {
         return true;
     }
 
-    private OnCreateRecorder(recorder: Recorder): void {
+    private OnCreateRecorder = (recorder: Recorder) => {
         this._recorder = recorder
-        this._operator?.Hooks.SubscribeHookListener(OperatorHooks.UPDATE_RECORDER, this.OnUpdateRecorder.bind(this))
+        this._operator?.Hooks.SubscribeHookListener(OperatorHooks.UPDATE_RECORDER, this.OnUpdateRecorder)
+    }
+    private OnRemoveRecorder = (recorder: Recorder) => {
+        this._operator?.Hooks.UnSubscribeListener(OperatorHooks.UPDATE_RECORDER, this.OnUpdateRecorder)
+        this._recorder = null
     }
 
     protected SetKey(): void {
         this.listenerKey = Free3DKeys.PREPARE_RECORD
     }
     public OnDisconnection(webSocket: WebSocket, hooks: WebSocketHooks): void {
-        this.webSocketHooks.UnSubscribeListener(RecorderHooks.CREATE_RECORDER, this.OnCreateRecorder.bind(this))
-
-        if (this._recorder === null) {
-            return;
-        }
-
-        this._operator?.Hooks.UnSubscribeListener(OperatorHooks.UPDATE_RECORDER, this.OnUpdateRecorder.bind(this))
+        this.webSocketHooks.UnSubscribeListener(RecorderHooks.CREATE_RECORDER, this.OnCreateRecorder)
+        this.webSocketHooks.UnSubscribeListener(RecorderHooks.REMOVE_RECORDER, this.OnRemoveRecorder)
     }
     protected listener(body: TPrepareRecord): void {
         const fileName: string = body.FileName

@@ -18,25 +18,28 @@ class ProcessRecording extends BaseWebSocketListener {
 
         this._operator = this.webSocketServer as RecorderOperator
 
-        this.webSocketHooks.SubscribeHookListener(RecorderHooks.CREATE_RECORDER, this.OnCreateRecorder.bind(this))
+        this.webSocketHooks.SubscribeHookListener(RecorderHooks.CREATE_RECORDER, this.OnCreateRecorder)
+        this.webSocketHooks.SubscribeHookListener(RecorderHooks.REMOVE_RECORDER, this.OnRemoveRecorder)
     }
 
-    private OnCreateRecorder(recorder: Recorder): void {
+    private OnCreateRecorder = (recorder: Recorder) => {
         this._recorder = recorder
+    }
+    private OnRemoveRecorder = (Recorder: Recorder) => {
+        this._recorder = null
     }
 
     protected SetKey(): void {
         this.listenerKey = Free3DKeys.PROCESS_RECORDING
     }
     public OnDisconnection(webSocket: WebSocket, hooks: WebSocketHooks): void {
-        this.webSocketHooks.UnSubscribeListener(RecorderHooks.CREATE_RECORDER, this.OnCreateRecorder.bind(this))
+        this.webSocketHooks.UnSubscribeListener(RecorderHooks.CREATE_RECORDER, this.OnCreateRecorder)
+        this.webSocketHooks.UnSubscribeListener(RecorderHooks.REMOVE_RECORDER, this.OnRemoveRecorder)
     }
     protected listener(body: RecordingState): void {
         if (this._recorder === null) {
             return
         }
-
-        console.log(body)
 
         const state: string = body.State
 

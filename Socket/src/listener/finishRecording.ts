@@ -10,7 +10,6 @@ import { OperatorHooks } from "../hooks/operatorHooks";
 class FinishRecording extends BaseWebSocketListener {
     listenerKey: string;
     private _operator: RecorderOperator | null = null
-    private _isPrepared: boolean = true;
 
     constructor(webSocketServer: RecorderOperator, webSocket: WebSocket, webSocketHooks: RecorderHooks) {
         super(webSocketServer, webSocket, webSocketHooks)

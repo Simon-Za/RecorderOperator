@@ -32,20 +32,20 @@ export class Recorder {
 
     public TakeOperator(operator: RecorderOperator): void {
         if (this._type === "Sub") {
-            operator.Hooks.SubscribeHookListener(OperatorHooks.PREPARE_RECORDING, this.OnPrepareRecording.bind(this))
+            operator.Hooks.SubscribeHookListener(OperatorHooks.PREPARE_RECORDING, this.OnPrepareRecording)
         }
 
-        operator.Hooks.SubscribeHookListener(OperatorHooks.RECORD, this.OnRecord.bind(this))
+        operator.Hooks.SubscribeHookListener(OperatorHooks.RECORD, this.OnRecord)
     }
 
-    private OnPrepareRecording(proxy: PrepareRecordProxy): void {
+    private OnPrepareRecording = (proxy: PrepareRecordProxy) => {
         const prepareRecording: ReceivedEvent = new ReceivedEvent(Free3DKeys.ON_PREPARE_RECORD)
         prepareRecording.addData("Proxy", proxy)
 
         this._socket.send(prepareRecording.JSONString)
     }
 
-    private OnRecord(proxy: RecordProxy): void {
+    private OnRecord = (proxy: RecordProxy) => {
         const record: ReceivedEvent = new ReceivedEvent(Free3DKeys.ON_TRIGGER_RECORD)
         record.addData("Proxy", proxy)
 
@@ -54,10 +54,10 @@ export class Recorder {
 
     public RemoveOperator(operator: RecorderOperator): void {
         if (this._type === "Sub") {
-            operator.Hooks.UnSubscribeListener(OperatorHooks.PREPARE_RECORDING, this.OnPrepareRecording.bind(this))
+            operator.Hooks.UnSubscribeListener(OperatorHooks.PREPARE_RECORDING, this.OnPrepareRecording)
         }
 
-        operator.Hooks.UnSubscribeListener(OperatorHooks.RECORD, this.OnRecord.bind(this))
+        operator.Hooks.UnSubscribeListener(OperatorHooks.RECORD, this.OnRecord)
     }
 
     public TakeState(state: string): void {

@@ -1,18 +1,13 @@
 import { WebSocket } from "ws";
 import { BaseWebSocketListener } from "../../athaeck-websocket-express-base/base";
 import { WebSocketHooks } from "../../athaeck-websocket-express-base/base/hooks";
-import { RecordingState } from "../types/recorder";
 import { RecorderOperator } from "../..";
 import { RecorderHooks } from "../hooks/recorderHooks";
 import { Free3DKeys } from "../types/keys";
 import { Recorder } from "../data/recorder";
-import { OperatorHooks } from "../hooks/operatorHooks";
-import { RecorderProxy } from "../types/proxy";
 import { ReceivedEvent } from "../../athaeck-websocket-express-base/base/helper";
-
-class Supervisor {
-
-}
+import { Supervisor } from "../data/supervisor";
+import { GetRecorderProxy } from "../helper/proxy";
 
 class InitSupervisor extends BaseWebSocketListener {
     listenerKey: string;
@@ -24,43 +19,24 @@ class InitSupervisor extends BaseWebSocketListener {
 
         this._operator = this.webSocketServer as RecorderOperator
 
-
+        this.webSocketHooks.SubscribeHookListener(RecorderHooks.CREATE_SUPERVISOR, this.OnCreateSupervisor)
+        this.webSocketHooks.SubscribeHookListener(RecorderHooks.REMOVE_SUPERVISOR, this.OnRemoveSupervisor)
     }
 
-    private OnUpdateRecorder = (recorder: Recorder[]) => {
-        console.log(this)
-        const takeRecorder: ReceivedEvent = new ReceivedEvent(OperatorHooks.UPDATE_RECORDER)
-        takeRecorder.addData("Proxy", this.GetRecorderProxy(recorder))
-        this.webSocket.send(takeRecorder.JSONString)
-    }
-    private OnFinish = () => {
-        const onFinish: ReceivedEvent = new ReceivedEvent(Free3DKeys.ON_FINISH_RECORD)
-        this.webSocket.send(onFinish.JSONString)
+    private OnCreateSupervisor = (supervisor: Supervisor) => {
+        this._supervisor = supervisor
     }
 
-    private GetRecorderProxy(recorder: Recorder[]): RecorderProxy[] {
-        const recorderProxy: RecorderProxy[] = []
-        for (const r of recorder) {
-            recorderProxy.push(r.RecorderData)
-        }
-
-        return recorderProxy
+    private OnRemoveSupervisor = (supervisor: Supervisor) => {
+        this._supervisor = null
     }
 
     protected SetKey(): void {
         this.listenerKey = Free3DKeys.INIT_SUPERVISOR
     }
     public OnDisconnection(webSocket: WebSocket, hooks: WebSocketHooks): void {
-        if (this._supervisor === null) {
-            return
-        }
-
-        console.log("1111111111111111111")
-        console.log(this._operator?.Hooks.listenerCount(OperatorHooks.UPDATE_RECORDER))
-        console.log(this._operator?.Hooks.listenerCount(OperatorHooks.FINISH))
-
-        this._operator?.Hooks.UnSubscribeListener(OperatorHooks.UPDATE_RECORDER, this.OnUpdateRecorder.bind(this))
-        this._operator?.Hooks.UnSubscribeListener(OperatorHooks.FINISH, this.OnFinish.bind(this))
+        this.webSocketHooks.UnSubscribeListener(RecorderHooks.CREATE_SUPERVISOR, this.OnCreateSupervisor)
+        this.webSocketHooks.UnSubscribeListener(RecorderHooks.REMOVE_SUPERVISOR, this.OnRemoveSupervisor)
     }
     protected listener(body: any): void {
         if (this._supervisor !== null) {
@@ -68,13 +44,7 @@ class InitSupervisor extends BaseWebSocketListener {
             return
         }
 
-        this._supervisor = new Supervisor()
-
-        this._operator?.Hooks.SubscribeHookListener(OperatorHooks.UPDATE_RECORDER, this.OnUpdateRecorder.bind(this))
-        this._operator?.Hooks.SubscribeHookListener(OperatorHooks.FINISH, this.OnFinish.bind(this))
-
-        console.log(this._operator?.Hooks.listenerCount(OperatorHooks.UPDATE_RECORDER))
-        console.log(this._operator?.Hooks.listenerCount(OperatorHooks.FINISH))
+        this._operator?.CreateSupervisor(this.webSocket, this.webSocketHooks)
 
         const recorder: Recorder[] | undefined = this._operator?.Recorder
 
@@ -87,7 +57,7 @@ class InitSupervisor extends BaseWebSocketListener {
         }
 
         const takeRecorder: ReceivedEvent = new ReceivedEvent(Free3DKeys.ON_INIT_SUPERVISOR)
-        takeRecorder.addData("Proxy", this.GetRecorderProxy(recorder))
+        takeRecorder.addData("Proxy", GetRecorderProxy(recorder))
         this.webSocket.send(takeRecorder.JSONString)
     }
 

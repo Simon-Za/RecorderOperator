@@ -8,9 +8,11 @@ import bodyParser from "body-parser";
 import { Recorder } from './src/data/recorder';
 import { RecorderHooks } from "./src/hooks/recorderHooks";
 import { OperatorHooks } from "./src/hooks/operatorHooks";
+import { Supervisor } from "./src/data/supervisor";
 
 export class RecorderOperator extends BaseWebSocketExpressAdoon {
     private _recorder: Recorder[] = []
+    private _supervisor: Supervisor | null = null
     private _operatorHooks: OperatorHooks;
 
     constructor(port: number) {
@@ -42,6 +44,7 @@ export class RecorderOperator extends BaseWebSocketExpressAdoon {
 
         if (recorder) {
             recorder.RemoveOperator(this)
+            recorder.Hooks.DispatchHook(RecorderHooks.REMOVE_RECORDER, recorder)
 
             this._recorder = this._recorder.filter(r => r !== recorder)
 
@@ -50,11 +53,14 @@ export class RecorderOperator extends BaseWebSocketExpressAdoon {
 
         let hooks: WebSocketHooks | undefined = recorder?.Hooks;
 
-        if (hooks === undefined) {
-            hooks = this._operatorHooks
+        if (this._supervisor) {
+            if (webSocket === this._supervisor.WebSocket) {
+                hooks = this._supervisor.Hooks
+                this._supervisor.Hooks.DispatchHook(RecorderHooks.REMOVE_SUPERVISOR, this._supervisor)
+                this._supervisor = null;
+            }
         }
 
-        console.log(hooks)
         return hooks
     }
     AddRoute(route: BaseExpressRoute): void {
@@ -65,7 +71,6 @@ export class RecorderOperator extends BaseWebSocketExpressAdoon {
     }
 
     public CreateRecorder(type: string, id: string, webSocket: WebSocket, hooks: RecorderHooks) {
-
         const recorder: Recorder = new Recorder(webSocket, hooks, type, id);
         recorder.TakeOperator(this)
         hooks.DispatchHook(RecorderHooks.CREATE_RECORDER, recorder)
@@ -74,6 +79,16 @@ export class RecorderOperator extends BaseWebSocketExpressAdoon {
 
         this.UpdateRecorder();
     }
+
+    public CreateSupervisor(webSocket: WebSocket, hooks: RecorderHooks): void {
+        const supervisor: Supervisor = new Supervisor(webSocket, hooks)
+        supervisor.TakeOperator(this)
+
+        hooks.DispatchHook(RecorderHooks.CREATE_SUPERVISOR, supervisor)
+
+        this._supervisor = supervisor
+    }
+
     public UpdateRecorder(): void {
         this._operatorHooks.DispatchHook(OperatorHooks.UPDATE_RECORDER, this._recorder)
     }
