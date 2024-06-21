@@ -54,6 +54,7 @@ export class RecorderOperator extends BaseWebSocketExpressAdoon {
             hooks = this._operatorHooks
         }
 
+        console.log(hooks)
         return hooks
     }
     AddRoute(route: BaseExpressRoute): void {
