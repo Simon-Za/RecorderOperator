@@ -2,5 +2,3 @@
 	url = https://github.com/NickHaecker/athaeck-vue3-extensions.git
 [submodule "Socket/athaeck-websocket-express-base"]
 	url = https://github.com/NickHaecker/athaeck-websocket-express-base.git
-[submodule "Calibrator/calibrating"]
-	url = https://github.com/HFU-DM-free3D/calibrating.git
