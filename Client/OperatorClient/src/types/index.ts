@@ -3,3 +3,7 @@ export type RecorderProxy = {
     Type: string,
     ID: string
 }
+
+export type CalibratorProxy = {
+    State: string
+}

@@ -8,21 +8,22 @@ import { TPrepareRecord } from "../types/recorder";
 import { OperatorHooks } from "../hooks/operatorHooks";
 import { Recorder } from "../data/recorder";
 import { ReceivedEvent } from "../../athaeck-websocket-express-base/base/helper";
+import { Supervisor } from "../data/supervisor";
 
 
 class StartRecording extends BaseWebSocketListener {
     listenerKey: string;
     private _operator: RecorderOperator | null = null
     private _isPrepared: boolean = true;
-    private _recorder: Recorder | null = null
+    private _supervisor: Supervisor | null = null
 
     constructor(webSocketServer: RecorderOperator, webSocket: WebSocket, webSocketHooks: RecorderHooks) {
         super(webSocketServer, webSocket, webSocketHooks)
 
         this._operator = this.webSocketServer as RecorderOperator
 
-        this.webSocketHooks.SubscribeHookListener(RecorderHooks.CREATE_RECORDER, this.OnCreateRecorder)
-        this.webSocketHooks.SubscribeHookListener(RecorderHooks.REMOVE_RECORDER, this.OnRemoveRecorder)
+        this.webSocketHooks.SubscribeHookListener(RecorderHooks.CREATE_SUPERVISOR, this.OnCreateSupervisor)
+        this.webSocketHooks.SubscribeHookListener(RecorderHooks.REMOVE_SUPERVISOR, this.OnRemoveSupervisor)
     }
 
     private OnUpdateRecorder = (recorder: Recorder[]) => {
@@ -44,23 +45,28 @@ class StartRecording extends BaseWebSocketListener {
         }
         return true;
     }
-    private OnCreateRecorder = (recorder: Recorder) => {
-        this._recorder = recorder
+    private OnCreateSupervisor = (supervisor: Supervisor) => {
+        this._supervisor = supervisor
         this._operator?.Hooks.SubscribeHookListener(OperatorHooks.UPDATE_RECORDER, this.OnUpdateRecorder)
     }
-    private OnRemoveRecorder = (recorder: Recorder) => {
+    private OnRemoveSupervisor = (supervisor: Supervisor) => {
         this._operator?.Hooks.UnSubscribeListener(OperatorHooks.UPDATE_RECORDER, this.OnUpdateRecorder)
-        this._recorder = null
+        this._supervisor = null
     }
 
     protected SetKey(): void {
         this.listenerKey = Free3DKeys.TRIGGER_RECORD
     }
     public OnDisconnection(webSocket: WebSocket, hooks: WebSocketHooks): void {
-        this.webSocketHooks.UnSubscribeListener(RecorderHooks.CREATE_RECORDER, this.OnCreateRecorder)
-        this.webSocketHooks.UnSubscribeListener(RecorderHooks.REMOVE_RECORDER, this.OnRemoveRecorder)
+        this.webSocketHooks.UnSubscribeListener(RecorderHooks.CREATE_RECORDER, this.OnCreateSupervisor)
+        this.webSocketHooks.UnSubscribeListener(RecorderHooks.REMOVE_RECORDER, this.OnRemoveSupervisor)
     }
     protected listener(body: TPrepareRecord): void {
+        if (this._supervisor !== null) {
+            console.log("Supervisor muss erst initiiert werden.")
+            return;
+        }
+
         const fileName: string = body.FileName
 
         if (!this._isPrepared) {

@@ -1,14 +1,15 @@
 import { defineStore } from 'pinia'
 import bus from '@/hooks/index'
 import { SendEvent } from '@/extensions/athaeck-websocket-vue3-extension/helper/types'
-import type { RecorderProxy, SessionData } from '@/types'
+import type { CalibratorProxy, RecorderProxy } from '@/types'
 
 
 
 export const useclientStore = defineStore({
   id: 'client',
   state: () => ({
-    recorder: null as RecorderProxy[] | null
+    recorder: null as RecorderProxy[] | null,
+    calibrator: null as CalibratorProxy | null
   }),
   actions: {
     Init(): void {
@@ -25,8 +26,14 @@ export const useclientStore = defineStore({
       console.log(receive)
 
       if (receive.eventName === "ON_INIT_SUPERVISOR") {
-        this.recorder = receive.data.Proxy
+        this.recorder = receive.data.Recorder
+        this.calibrator = receive.data.Calibrator
       }
+
+      if (receive.eventName === "UPDATE_CALIBRATOR") {
+        this.calibrator = receive.data.Proxy
+      }
+
       if (receive.eventName === "UPDATE_RECORDER") {
         this.recorder = receive.data.Proxy
       }
@@ -86,6 +93,12 @@ export const useclientStore = defineStore({
         return false
       }
       return this.Recorder?.every((r: RecorderProxy) => r.State === "Recording")
+    },
+    GetCalibrator(state) {
+      return state.calibrator
+    },
+    HasCalibrator(state) {
+      return this.GetCalibrator !== null
     }
   }
 })

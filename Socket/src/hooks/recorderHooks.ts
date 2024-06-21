@@ -5,4 +5,6 @@ export class RecorderHooks extends WebSocketHooks {
     public static readonly REMOVE_RECORDER = "REMOVE_RECORDER"
     public static readonly CREATE_SUPERVISOR = "CREATE_SUPERVISOR"
     public static readonly REMOVE_SUPERVISOR = "REMOVE_SUPERVISOR"
+    public static readonly CREATE_CALIBRATOR = "CREATE_CALIBRATOR"
+    public static readonly REMOVE_CALIBRATOR = "REMOVE_CALIBRATOR"
 }

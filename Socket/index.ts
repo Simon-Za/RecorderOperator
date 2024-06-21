@@ -9,10 +9,12 @@ import { Recorder } from './src/data/recorder';
 import { RecorderHooks } from "./src/hooks/recorderHooks";
 import { OperatorHooks } from "./src/hooks/operatorHooks";
 import { Supervisor } from "./src/data/supervisor";
+import { Calibrator } from "./src/data/calibrator";
 
 export class RecorderOperator extends BaseWebSocketExpressAdoon {
     private _recorder: Recorder[] = []
     private _supervisor: Supervisor | null = null
+    private _calibrator: Calibrator | null = null
     private _operatorHooks: OperatorHooks;
 
     constructor(port: number) {
@@ -28,6 +30,12 @@ export class RecorderOperator extends BaseWebSocketExpressAdoon {
     }
     public get Recorder(): Recorder[] {
         return this._recorder
+    }
+    public get Calibrator(): Calibrator | null {
+        return this._calibrator
+    }
+    public get Supervisor(): Supervisor | null {
+        return this._supervisor
     }
 
     protected ValidateConnection(webSocket: WebSocket): boolean {
@@ -61,6 +69,14 @@ export class RecorderOperator extends BaseWebSocketExpressAdoon {
             }
         }
 
+        if (this._calibrator) {
+            if (webSocket === this._calibrator.WebSocket) {
+                hooks = this._calibrator.Hooks
+                this._calibrator.Hooks.DispatchHook(RecorderHooks.REMOVE_CALIBRATOR, this._calibrator)
+                this._calibrator = null;
+            }
+        }
+
         return hooks
     }
     AddRoute(route: BaseExpressRoute): void {
@@ -78,6 +94,12 @@ export class RecorderOperator extends BaseWebSocketExpressAdoon {
         this._recorder.push(recorder)
 
         this.UpdateRecorder();
+    }
+    public CreateCalibrator(webSocket: WebSocket, hooks: RecorderHooks): void {
+        this._calibrator = new Calibrator(webSocket, hooks)
+
+        hooks.DispatchHook(RecorderHooks.CREATE_CALIBRATOR, this._calibrator)
+        this._operatorHooks.DispatchHook(OperatorHooks.CONNECT_CALIBRATOR, this._calibrator)
     }
 
     public CreateSupervisor(webSocket: WebSocket, hooks: RecorderHooks): void {

@@ -48,16 +48,9 @@ class InitSupervisor extends BaseWebSocketListener {
 
         const recorder: Recorder[] | undefined = this._operator?.Recorder
 
-        if (recorder === undefined) {
-            return;
-        }
-
-        if (recorder.length === 0) {
-            return;
-        }
-
         const takeRecorder: ReceivedEvent = new ReceivedEvent(Free3DKeys.ON_INIT_SUPERVISOR)
-        takeRecorder.addData("Proxy", GetRecorderProxy(recorder))
+        takeRecorder.addData("Recorder", GetRecorderProxy(recorder))
+        takeRecorder.addData("Calibrator", this._operator?.Calibrator?.CalibratorData)
         this.webSocket.send(takeRecorder.JSONString)
     }
 

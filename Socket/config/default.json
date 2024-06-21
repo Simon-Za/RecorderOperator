@@ -5,7 +5,10 @@
         "prepareRecording",
         "startRecording",
         "initSupervisor",
-        "finishRecording"
+        "finishRecording",
+        "initCalibrator",
+        "processCalibrator",
+        "startCalibration"
     ],
     "express": {
         "useNetwork": false,
