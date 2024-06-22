@@ -14,8 +14,9 @@ const socketStore = useWebSocketStore()
 const clientStore = useclientStore()
 
 const dataName = ref("")
-
-
+const createPCDJSON = ref(true)
+const subPath = ref("")
+const markerLength = ref(0.15)
 
 const recorder = computed(() => {
   return clientStore.Recorder
@@ -50,7 +51,17 @@ const areSubsWaiting = computed(() => {
 const areAllRecording = computed(() => {
   return clientStore.AreAllRecording
 })
+const hasCalibrator = computed(() => {
+  return clientStore.HasCalibrator
+})
+const getCalibrator = computed(() => {
+  return clientStore.GetCalibrator
+})
+const isCalibratorInIdle = computed(() => {
+  return clientStore.IsCalibratorInIdle
+})
 
+const subCount = ref(getSubs.value.length)
 
 const rules = ref({
   required: (value: string) => !!value || 'Required.'
@@ -98,7 +109,18 @@ function PrepareRecord() {
   prepareRecord.addData("FileName", dataName.value)
   socketStore.SendEvent(prepareRecord)
 }
+function Calibrate() {
+  const proxy = {
+    subCount: subCount.value,
+    markerLength: markerLength.value,
+    subPath: subPath.value,
+    createJson: createPCDJSON.value
+  }
 
+  const calibrate: SendEvent = new SendEvent("TRIGGER_CALIBRATION")
+  calibrate.addData("Proxy", proxy)
+  socketStore.SendEvent(calibrate)
+}
 
 </script>
 
@@ -115,11 +137,14 @@ function PrepareRecord() {
 
           <v-card-text>
             <div>
-              Actions:
+              Selektor:
             </div>
             <div class="data-name">
               <v-text-field :rules="[rules.required]" :disabled="areAllRecording || (hasSubs && areSubsWaiting)"
                 v-model="dataName" label="Name der Datei"></v-text-field>
+            </div>
+            <div>
+              Actions:
             </div>
             <div class="flex">
               <v-btn
@@ -148,6 +173,66 @@ function PrepareRecord() {
         </v-card>
       </div>
     </div>
+    <div class="bottom-content">
+      <div class="flex-container">
+        <v-card class="" elevation="2">
+          <v-card-item>
+            <v-card-title>
+              Übersicht über Calibrator:
+            </v-card-title>
+          </v-card-item>
+
+          <v-card-text>
+            <div>
+              Selektoren:
+            </div>
+            <div class="selector-section">
+              <div class="action-field-element">
+                <span>Anzahl der Subs</span>
+                <v-select :disabled="!isCalibratorInIdle" :items="[0, 1, 2, 3, 4, 5]" v-model="subCount"
+                  label="Anzahl der Subs"></v-select>
+              </div>
+              <div class="action-field-element">
+                <span>Marker Länge</span>
+                <v-select label="Marker Länge" :disabled="!isCalibratorInIdle" v-model="markerLength"
+                  :items="[0.00, 0.05, 0.10, 0.15, 0.20, 0.25]"></v-select>
+              </div>
+              <div class="action-field-element">
+                <span>Subpath</span>
+                <v-text-field :disabled="!isCalibratorInIdle" v-model="subPath" lang="Subpath"></v-text-field>
+              </div>
+              <div class="action-field-element">
+                <span>Erstelle Pointcloud JSON</span>
+                <v-switch :disabled="!isCalibratorInIdle" v-model="createPCDJSON" :label="`${createPCDJSON.toString()}`"
+                  hide-details></v-switch>
+              </div>
+            </div>
+            <div>
+              Actions:
+            </div>
+            <div class="flex">
+              <v-btn @click="Calibrate" :disabled="!hasCalibrator || subPath.length === 0 || !isCalibratorInIdle"
+                width="300">Kalibrierung
+                starten</v-btn>
+            </div>
+          </v-card-text>
+        </v-card>
+      </div>
+      <div class="flex-container">
+        <template v-if="hasCalibrator">
+          <v-card class="calibrator" elevation="2">
+            <v-card-item class="card-header">
+              <v-card-title>
+                Calibrator
+              </v-card-title>
+              <v-card-subtitle>
+                STATUS: {{ getCalibrator?.State }}
+              </v-card-subtitle>
+            </v-card-item>
+          </v-card>
+        </template>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -156,9 +241,15 @@ function PrepareRecord() {
   width: 100%;
 }
 
-.top-content {
-  padding: 50px 0;
+.bottom-content {
+  padding: 50px 0 0 0;
   display: flex;
+}
+
+.top-content {
+  padding: 50px 0 0 0;
+  display: flex;
+  /* height: 500px; */
 }
 
 .flex-container {
@@ -173,5 +264,16 @@ function PrepareRecord() {
 
 .recorder-item {
   margin-bottom: 14px;
+}
+
+.selector-section {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.action-field-element {
+  width: 50%;
+  padding: 0 7px;
 }
 </style>

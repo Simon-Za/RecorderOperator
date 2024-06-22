@@ -9,7 +9,7 @@ export const useclientStore = defineStore({
   id: 'client',
   state: () => ({
     recorder: null as RecorderProxy[] | null,
-    calibrator: null as CalibratorProxy | null
+    calibrator: undefined as CalibratorProxy | undefined
   }),
   actions: {
     Init(): void {
@@ -37,6 +37,12 @@ export const useclientStore = defineStore({
       if (receive.eventName === "UPDATE_RECORDER") {
         this.recorder = receive.data.Proxy
       }
+      if (receive.eventName === "ON_CONNECT_CALIBRATOR") {
+        this.calibrator = receive.data.Proxy
+      }
+      if (receive.eventName === "ON_DISCONNECT_CALIBRATOR") [
+        this.calibrator = undefined
+      ]
     },
 
   },
@@ -98,7 +104,13 @@ export const useclientStore = defineStore({
       return state.calibrator
     },
     HasCalibrator(state) {
-      return this.GetCalibrator !== null
+      return this.GetCalibrator !== undefined
+    },
+    IsCalibratorInIdle(state) {
+      if (!this.HasCalibrator) {
+        return false
+      }
+      return state?.calibrator.State === "Idle"
     }
   }
 })

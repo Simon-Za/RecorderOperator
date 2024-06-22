@@ -1,3 +1,4 @@
+import { CalibrateProxy } from "./proxy"
 
 
 export type TRecorder = {
@@ -9,4 +10,7 @@ export type RecordingState = {
 }
 export type TPrepareRecord = {
     FileName: string
+}
+export type TCalibrate = {
+    Proxy: CalibrateProxy
 }

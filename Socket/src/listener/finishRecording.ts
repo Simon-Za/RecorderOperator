@@ -25,7 +25,7 @@ class FinishRecording extends BaseWebSocketListener {
     }
     protected listener(body: any): void {
 
-        this._operator?.Hooks.DispatchHook(OperatorHooks.FINISH, null)
+        this._operator?.Hooks.DispatchHook(OperatorHooks.FINISH_RECORD, null)
     }
 }
 

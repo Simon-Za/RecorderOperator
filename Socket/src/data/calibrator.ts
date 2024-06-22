@@ -28,7 +28,10 @@ export class Calibrator {
 
     private OnCalibrate = (proxy: CalibrateProxy) => {
         const calibrate: ReceivedEvent = new ReceivedEvent(Free3DKeys.ON_TRIGGER_CALIBRATION)
-        calibrate.addData("Proxy", proxy)
+        calibrate.addData("SubCount", proxy.subCount)
+        calibrate.addData("MarkerLength", proxy.markerLength)
+        calibrate.addData("SubPath", proxy.subPath)
+        calibrate.addData("CreateJSON", proxy.createJson)
         this._webSocket.send(calibrate.JSONString)
     }
 

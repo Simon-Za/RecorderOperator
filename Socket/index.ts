@@ -64,6 +64,7 @@ export class RecorderOperator extends BaseWebSocketExpressAdoon {
         if (this._supervisor) {
             if (webSocket === this._supervisor.WebSocket) {
                 hooks = this._supervisor.Hooks
+                this._supervisor.RemoveOperator(this)
                 this._supervisor.Hooks.DispatchHook(RecorderHooks.REMOVE_SUPERVISOR, this._supervisor)
                 this._supervisor = null;
             }
@@ -72,7 +73,9 @@ export class RecorderOperator extends BaseWebSocketExpressAdoon {
         if (this._calibrator) {
             if (webSocket === this._calibrator.WebSocket) {
                 hooks = this._calibrator.Hooks
+                this._calibrator.RemoveOperator(this)
                 this._calibrator.Hooks.DispatchHook(RecorderHooks.REMOVE_CALIBRATOR, this._calibrator)
+                this._operatorHooks.DispatchHook(OperatorHooks.DISCONNECT_CALIBRATOR, this._calibrator)
                 this._calibrator = null;
             }
         }
@@ -97,6 +100,7 @@ export class RecorderOperator extends BaseWebSocketExpressAdoon {
     }
     public CreateCalibrator(webSocket: WebSocket, hooks: RecorderHooks): void {
         this._calibrator = new Calibrator(webSocket, hooks)
+        this._calibrator.TakeOperator(this)
 
         hooks.DispatchHook(RecorderHooks.CREATE_CALIBRATOR, this._calibrator)
         this._operatorHooks.DispatchHook(OperatorHooks.CONNECT_CALIBRATOR, this._calibrator)

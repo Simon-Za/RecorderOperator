@@ -5,9 +5,6 @@ export type RecordProxy = {
     FileName: string
 }
 
-export type CalibrateProxy = {
-
-}
 
 export type RecorderProxy = {
     State: string,
@@ -17,4 +14,11 @@ export type RecorderProxy = {
 
 export type CalibratorProxy = {
     State: string
+}
+
+export type CalibrateProxy = {
+    subCount: number,
+    markerLength: number,
+    subPath: string,
+    createJson: boolean
 }

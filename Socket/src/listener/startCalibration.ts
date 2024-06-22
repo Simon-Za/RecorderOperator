@@ -4,7 +4,7 @@ import { WebSocketHooks } from "../../athaeck-websocket-express-base/base/hooks"
 import { RecorderOperator } from "../..";
 import { Free3DKeys } from "../types/keys";
 import { RecorderHooks } from "../hooks/recorderHooks";
-import { TPrepareRecord } from "../types/recorder";
+import { TCalibrate, TPrepareRecord } from "../types/recorder";
 import { OperatorHooks } from "../hooks/operatorHooks";
 import { Supervisor } from "../data/supervisor";
 import { Calibrator } from "../data/calibrator";
@@ -21,6 +21,7 @@ class StartCalibrating extends BaseWebSocketListener {
 
         this._operator = this.webSocketServer as RecorderOperator
         this._calibrator = this._operator.Calibrator
+        this._supervisor = this._operator.Supervisor
 
         this.webSocketHooks.SubscribeHookListener(RecorderHooks.CREATE_SUPERVISOR, this.OnCreateSupervisor)
         this.webSocketHooks.SubscribeHookListener(RecorderHooks.REMOVE_SUPERVISOR, this.OnRemoveSupervisor)
@@ -28,10 +29,10 @@ class StartCalibrating extends BaseWebSocketListener {
 
     private OnCreateSupervisor = (supervisor: Supervisor) => {
         this._supervisor = supervisor
-        this._operator?.Hooks.SubscribeHookListener(OperatorHooks.UPDATE_CALIBRATOR, this.OnUpdateCalibrator)
+        this._operator?.Hooks.SubscribeHookListener(OperatorHooks.CONNECT_CALIBRATOR, this.OnUpdateCalibrator)
     }
     private OnRemoveSupervisor = (supervisor: Supervisor) => {
-        this._operator?.Hooks.UnSubscribeListener(OperatorHooks.UPDATE_CALIBRATOR, this.OnUpdateCalibrator)
+        this._operator?.Hooks.UnSubscribeListener(OperatorHooks.DISCONNECT_CALIBRATOR, this.OnUpdateCalibrator)
         this._supervisor = null
     }
 
@@ -46,32 +47,18 @@ class StartCalibrating extends BaseWebSocketListener {
         this.webSocketHooks.UnSubscribeListener(RecorderHooks.CREATE_SUPERVISOR, this.OnCreateSupervisor)
         this.webSocketHooks.UnSubscribeListener(RecorderHooks.REMOVE_SUPERVISOR, this.OnRemoveSupervisor)
     }
-    protected listener(body: TPrepareRecord): void {
-        if (this._supervisor !== null) {
+    protected listener(body: TCalibrate): void {
+        if (this._supervisor === null) {
             console.log("Supervisor muss erst initiiert werden.")
             return;
         }
 
         if (this._calibrator === null) {
             console.log("Calibrator muss sich erst verbunden haben.")
+            return
         }
 
-        // const fileName: string = body.FileName
-
-        // if (!this._isPrepared) {
-        //     console.log("Recorder wurden bereits gestartet.")
-
-        //     const errorEvent: ReceivedEvent = new ReceivedEvent("ERROR");
-        //     errorEvent.addData("Message", "Recorder wurden bereits gestartet.")
-
-        //     this.webSocket.send(errorEvent.JSONString)
-
-        //     return
-        // }
-
-        this._operator?.Hooks.DispatchHook(OperatorHooks.CALIBRATE, {
-            // FileName: fileName
-        })
+        this._operator?.Hooks.DispatchHook(OperatorHooks.CALIBRATE, body.Proxy)
     }
 }
 
