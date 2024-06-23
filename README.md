@@ -47,8 +47,8 @@ VITE_WEBSOCKET_ADDRESS="ws://<ip-address, where the WebSocket-Server is availabl
 ## [Installation of Recorder](recorder)
 1. navigate to the folder of the recorder ```.\Receiver``` via ``` cd .\Receiver\```
 2. install the project via ```npm install```
-3. create a ```loca.json``` in the folder ```.\Receiver\config```
-4. add to the ```loca.json``` the following JSON object:
+3. create a ```local.json``` in the folder ```.\Receiver\config```
+4. add to the ```local.json``` the following JSON object:
 ```bash
 {
     "socket": {
