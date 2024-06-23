@@ -1,4 +1,6 @@
 [submodule "Client/OperatorClient/src/extensions"]
 	url = https://github.com/NickHaecker/athaeck-vue3-extensions.git
+	path = Client/OperatorClient/src/extensions
 [submodule "Socket/athaeck-websocket-express-base"]
 	url = https://github.com/NickHaecker/athaeck-websocket-express-base.git
+	path = Socket/athaeck-websocket-express-base
