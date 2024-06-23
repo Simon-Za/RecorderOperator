@@ -42,6 +42,7 @@ VITE_WEBSOCKET_ADDRESS="ws://<ip-address, where the WebSocket-Server is availabl
 ```
 3. install the project via: ```npm install```
 4. install the project via: ```npm run dev```
+5. open the website on ```http://localhost:5173/```
 
 
 ## [Installation of Recorder](recorder)
