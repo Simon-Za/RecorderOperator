@@ -14,9 +14,10 @@ This project contains a WebSocket server for the network communication of an ope
 - Nvidia RTX 2080 Super
 
 ## How to start the Repo
-1. install and start the WebSocket-Server in chapter [Installation WebSocket-Server](WSS)
-2. install and start operator client in chapter [Installation of Operator UI](operator)
-3. install and start recorder in chapter [Installation of Recorder](recorder)
+1. initialize all submodules via: ```git submodule update --init --recursive```
+2. install and start the WebSocket-Server in chapter [Installation WebSocket-Server](WSS)
+3. install and start operator client in chapter [Installation of Operator UI](operator)
+4. install and start recorder in chapter [Installation of Recorder](recorder)
 
 ## [Installation WebSocket-Server](WSS)
 1. navigate to the folder of the server ```.\Socket``` via the console ```cd .\Socket\```
