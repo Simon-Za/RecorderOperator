@@ -48,7 +48,7 @@ export class RecorderOperator extends BaseWebSocketExpressAdoon {
 
     }
     Disconnect(webSocket: WebSocket): WebSocketHooks | undefined {
-        const recorder: Recorder | undefined = this._recorder.find(r => r.Socket === webSocket);
+        const recorder: Recorder | undefined = this._recorder.find(r => r.WebSocket === webSocket);
 
         if (recorder) {
             recorder.RemoveOperator(this)
