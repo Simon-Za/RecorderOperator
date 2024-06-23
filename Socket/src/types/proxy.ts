@@ -20,5 +20,10 @@ export type CalibrateProxy = {
     subCount: number,
     markerLength: number,
     subPath: string,
-    createJson: boolean
+    createJson: boolean,
+    useCharuco: boolean,
+    icpIterations: number,
+    pcdFrames: number,
+    pcdJustCenter: boolean,
+    createNPZs: boolean
 }

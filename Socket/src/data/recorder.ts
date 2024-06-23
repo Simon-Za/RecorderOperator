@@ -5,32 +5,23 @@ import { OperatorHooks } from "../hooks/operatorHooks";
 import { ReceivedEvent } from "../../athaeck-websocket-express-base/base/helper";
 import { Free3DKeys } from "../types/keys";
 import { PrepareRecordProxy, RecordProxy, RecorderProxy } from "../types/proxy";
+import { OperatorComponent } from "./operatorComponent";
 
 
-export class Recorder {
-    private _socket: WebSocket
-    private _hooks: RecorderHooks
-
+export class Recorder extends OperatorComponent {
     private _state: string
     private _type: string;
     private _id: string
 
     constructor(socket: WebSocket, hooks: RecorderHooks, type: string, id: string) {
-        this._socket = socket
-        this._hooks = hooks
+        super(socket, hooks)
         this._type = type
         this._id = id
         this._state = "Idle"
     }
 
-    public get Socket(): WebSocket {
-        return this._socket
-    }
-    public get Hooks(): RecorderHooks {
-        return this._hooks
-    }
-
     public TakeOperator(operator: RecorderOperator): void {
+        this.hooks.DispatchHook(RecorderHooks.CREATE_RECORDER, this)
         if (this._type === "Sub") {
             operator.Hooks.SubscribeHookListener(OperatorHooks.PREPARE_RECORDING, this.OnPrepareRecording)
         }
@@ -42,17 +33,18 @@ export class Recorder {
         const prepareRecording: ReceivedEvent = new ReceivedEvent(Free3DKeys.ON_PREPARE_RECORD)
         prepareRecording.addData("Proxy", proxy)
 
-        this._socket.send(prepareRecording.JSONString)
+        this.webSocket.send(prepareRecording.JSONString)
     }
 
     private OnRecord = (proxy: RecordProxy) => {
         const record: ReceivedEvent = new ReceivedEvent(Free3DKeys.ON_TRIGGER_RECORD)
         record.addData("Proxy", proxy)
 
-        this._socket.send(record.JSONString)
+        this.webSocket.send(record.JSONString)
     }
 
     public RemoveOperator(operator: RecorderOperator): void {
+        this.hooks.DispatchHook(RecorderHooks.REMOVE_RECORDER, this)
         if (this._type === "Sub") {
             operator.Hooks.UnSubscribeListener(OperatorHooks.PREPARE_RECORDING, this.OnPrepareRecording)
         }

@@ -14,9 +14,16 @@ const socketStore = useWebSocketStore()
 const clientStore = useclientStore()
 
 const dataName = ref("")
-const createPCDJSON = ref(true)
-const subPath = ref("")
-const markerLength = ref(0.15)
+
+const createPCDJSON = ref(true) //hab ich
+const subPath = ref("") //hab ich
+const markerLength = ref(0.15) //hab ich
+const useCharuco = ref(false)
+const icpIterations = ref(0)
+const pcdFrames = ref(5)
+const pcdJustCenter = ref(false)
+const createNPZs = ref(true)
+
 
 const recorder = computed(() => {
   return clientStore.Recorder
@@ -61,7 +68,7 @@ const isCalibratorInIdle = computed(() => {
   return clientStore.IsCalibratorInIdle
 })
 
-const subCount = ref(getSubs.value.length)
+const subCount = ref(getSubs.value.length) //hab ich
 
 const rules = ref({
   required: (value: string) => !!value || 'Required.'
@@ -114,7 +121,13 @@ function Calibrate() {
     subCount: subCount.value,
     markerLength: markerLength.value,
     subPath: subPath.value,
-    createJson: createPCDJSON.value
+    createJson: createPCDJSON.value,
+
+    useCharuco: useCharuco.value,
+    icpIterations: icpIterations.value,
+    pcdFrames: pcdFrames.value,
+    pcdJustCenter: pcdJustCenter.value,
+    createNPZs: createNPZs.value
   }
 
   const calibrate: SendEvent = new SendEvent("TRIGGER_CALIBRATION")
@@ -199,11 +212,40 @@ function Calibrate() {
               </div>
               <div class="action-field-element">
                 <span>Subpath</span>
-                <v-text-field :disabled="!isCalibratorInIdle" v-model="subPath" lang="Subpath"></v-text-field>
+                <v-text-field :disabled="!isCalibratorInIdle" v-model="subPath" label="Subpath"></v-text-field>
               </div>
               <div class="action-field-element">
                 <span>Erstelle Pointcloud JSON</span>
                 <v-switch :disabled="!isCalibratorInIdle" v-model="createPCDJSON" :label="`${createPCDJSON.toString()}`"
+                  hide-details></v-switch>
+              </div>
+              <div class="action-field-element">
+                <span>Charuco Kalibrierung</span>
+                <v-switch :disabled="!isCalibratorInIdle" v-model="useCharuco" :label="`${useCharuco.toString()}`"
+                  hide-details></v-switch>
+              </div>
+              <div class="action-field-element">
+                <span>ICP-Iterationen</span>
+                <v-select label="Anzahl der Iterationen" :disabled="!isCalibratorInIdle" v-model="icpIterations"
+                  :items="[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38]"></v-select>
+              </div>
+              <div class="action-field-element">
+                <span>Anzahl PCD Frames</span>
+                <v-select label="Anzahl der PCD Frames" :disabled="!isCalibratorInIdle" v-model="pcdFrames"
+                  :items="[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38]"></v-select>
+              </div>
+              <div class="action-field-element">
+                <span>Erstelle Init NPZ</span>
+
+              </div>
+              <div class="action-field-element">
+                <span>PCD Centered</span>
+                <v-switch :disabled="!isCalibratorInIdle" v-model="pcdJustCenter" :label="`${pcdJustCenter.toString()}`"
+                  hide-details></v-switch>
+              </div>
+              <div class="action-field-element">
+                <span>Erstelle NPZs</span>
+                <v-switch :disabled="!isCalibratorInIdle" v-model="createNPZs" :label="`${createNPZs.toString()}`"
                   hide-details></v-switch>
               </div>
             </div>

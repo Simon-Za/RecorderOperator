@@ -52,7 +52,6 @@ export class RecorderOperator extends BaseWebSocketExpressAdoon {
 
         if (recorder) {
             recorder.RemoveOperator(this)
-            recorder.Hooks.DispatchHook(RecorderHooks.REMOVE_RECORDER, recorder)
 
             this._recorder = this._recorder.filter(r => r !== recorder)
 
@@ -65,7 +64,6 @@ export class RecorderOperator extends BaseWebSocketExpressAdoon {
             if (webSocket === this._supervisor.WebSocket) {
                 hooks = this._supervisor.Hooks
                 this._supervisor.RemoveOperator(this)
-                this._supervisor.Hooks.DispatchHook(RecorderHooks.REMOVE_SUPERVISOR, this._supervisor)
                 this._supervisor = null;
             }
         }
@@ -74,7 +72,6 @@ export class RecorderOperator extends BaseWebSocketExpressAdoon {
             if (webSocket === this._calibrator.WebSocket) {
                 hooks = this._calibrator.Hooks
                 this._calibrator.RemoveOperator(this)
-                this._calibrator.Hooks.DispatchHook(RecorderHooks.REMOVE_CALIBRATOR, this._calibrator)
                 this._operatorHooks.DispatchHook(OperatorHooks.DISCONNECT_CALIBRATOR, this._calibrator)
                 this._calibrator = null;
             }
@@ -92,7 +89,6 @@ export class RecorderOperator extends BaseWebSocketExpressAdoon {
     public CreateRecorder(type: string, id: string, webSocket: WebSocket, hooks: RecorderHooks) {
         const recorder: Recorder = new Recorder(webSocket, hooks, type, id);
         recorder.TakeOperator(this)
-        hooks.DispatchHook(RecorderHooks.CREATE_RECORDER, recorder)
 
         this._recorder.push(recorder)
 
@@ -102,15 +98,12 @@ export class RecorderOperator extends BaseWebSocketExpressAdoon {
         this._calibrator = new Calibrator(webSocket, hooks)
         this._calibrator.TakeOperator(this)
 
-        hooks.DispatchHook(RecorderHooks.CREATE_CALIBRATOR, this._calibrator)
         this._operatorHooks.DispatchHook(OperatorHooks.CONNECT_CALIBRATOR, this._calibrator)
     }
 
     public CreateSupervisor(webSocket: WebSocket, hooks: RecorderHooks): void {
         const supervisor: Supervisor = new Supervisor(webSocket, hooks)
         supervisor.TakeOperator(this)
-
-        hooks.DispatchHook(RecorderHooks.CREATE_SUPERVISOR, supervisor)
 
         this._supervisor = supervisor
     }
