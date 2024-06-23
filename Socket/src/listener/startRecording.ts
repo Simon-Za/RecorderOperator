@@ -62,7 +62,7 @@ class StartRecording extends BaseWebSocketListener {
         this.webSocketHooks.UnSubscribeListener(RecorderHooks.REMOVE_RECORDER, this.OnRemoveSupervisor)
     }
     protected listener(body: TPrepareRecord): void {
-        if (this._supervisor !== null) {
+        if (this._supervisor === null) {
             console.log("Supervisor muss erst initiiert werden.")
             return;
         }
