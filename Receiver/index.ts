@@ -2,6 +2,7 @@ import WebSocket from 'ws';
 import { exec } from 'child_process';
 import config from "config"
 import { EventEmitter } from "events"
+import * as fs from 'fs';
 
 const socket: any = config.get("socket")
 const azureKinect: any = config.get("azureKinect")
@@ -11,6 +12,37 @@ const timeToWait: number = timer.factor * timer.time
 
 const url: string = `ws://${socket.host}:${socket.port}`
 const ws = new WebSocket(url);
+
+function GetFileName(): string {
+    const typeCapital: string = azureKinect.type[0]
+    let id: string = ""
+    if (typeCapital === "S") {
+        id = azureKinect.id.toString()
+    }
+    const fileName: string = typeCapital + id
+    return fileName
+}
+
+function ValidateFolder(path: string): void {
+    let p: string = path
+
+    if (path.includes("cali")) {
+        return
+    }
+
+    if (path.endsWith("/") || path.endsWith("\\")) {
+
+        p = p.slice(0, -1)
+
+    }
+
+    if (!fs.existsSync(p)) {
+        fs.mkdirSync(p, { recursive: true });
+        console.log(`Verzeichnis '${p}' wurde erstellt.`);
+    } else {
+        console.log(`Verzeichnis '${p}' existiert bereits.`);
+    }
+}
 
 
 export class ReceivedEvent {
@@ -51,13 +83,17 @@ class RecorderHooks extends EventEmitter {
 const recorderHooks: RecorderHooks = new RecorderHooks()
 
 recorderHooks.SubscribeHookListener("ON_PREPARE_RECORD", (body: any) => {
-    const fileName: string = body.Proxy.FileName + azureKinect.type + azureKinect.id
+    const filePathName: string = body.Proxy.FileName + GetFileName()
     const sdkPath: string = azureKinect.sdkPath
     const folderPath: string = azureKinect.folderPath
     const baseCommand: string = azureKinect.baseCommand
 
+    const folderRoute: string = folderPath + "/" + body.Proxy.FileName
+
+    ValidateFolder(folderRoute)
+
     const command = baseCommand
-        .replace("{{fileName}}", fileName)
+        .replace("{{fileName}}", filePathName)
         .replace("{{sdkPath}}", `"${sdkPath}"`)
         .replace("{{folderPath}}", `${folderPath}`)
         .replaceAll("/", "\\");
@@ -71,7 +107,7 @@ recorderHooks.SubscribeHookListener("ON_PREPARE_RECORD", (body: any) => {
 })
 
 recorderHooks.SubscribeHookListener("ON_TRIGGER_RECORD", (body) => {
-    const fileName: string = body.Proxy.FileName + azureKinect.type + azureKinect.id
+    const filePathName: string = body.Proxy.FileName + GetFileName()
 
     const type: string = azureKinect.type
     if (type === "Master") {
@@ -79,8 +115,12 @@ recorderHooks.SubscribeHookListener("ON_TRIGGER_RECORD", (body) => {
         const folderPath: string = azureKinect.folderPath
         const baseCommand: string = azureKinect.baseCommand
 
+        const folderRoute: string = folderPath + "/" + body.Proxy.FileName
+
+        ValidateFolder(folderRoute)
+
         const command = baseCommand
-            .replace("{{fileName}}", fileName)
+            .replace("{{fileName}}", filePathName)
             .replace("{{sdkPath}}", `"${sdkPath}"`)
             .replace("{{folderPath}}", `${folderPath}`)
             .replaceAll("/", "\\");

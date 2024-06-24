@@ -154,7 +154,7 @@ function Calibrate() {
             </div>
             <div class="data-name">
               <v-text-field :rules="[rules.required]" :disabled="areAllRecording || (hasSubs && areSubsWaiting)"
-                v-model="dataName" label="Name der Datei"></v-text-field>
+                v-model="dataName" label="Subpfad der Datei"></v-text-field>
             </div>
             <div>
               Actions:
