@@ -53,20 +53,20 @@ class SocketCalibrator(BaseCalibrator):
         print(baseProxy)
 
         proxy = Proxy(
-        recordings_path="C:\\Users\\nicka\\Desktop\\Test",
-        mkvToolNix_path="C:\\Program Files\\MKVToolNix",
-        kinect_pic_rec_extractor=".venv/Lib/site-packages/open3d/examples/reconstruction_system/sensors",
-        create_dg_init_npz="",
-        amount_Subs=baseProxy["SubCount"],
-        marker_length=baseProxy["MarkerLength"],
-        sub_path=baseProxy["SubPath"],
-        create_pcd_json=baseProxy["CreateJSON"],
-        use_charuco=baseProxy["UseCharuco"],
-        icp_itteration=baseProxy["IcpItteration"],
-        amount_pcd_frames=baseProxy["AmountPcdFrames"],
-        pcd_just_center=baseProxy["PcdJustCenter"],
-        create_npzs=baseProxy["CreateNpzs"]
-    )
+            recordings_path="C:\\Users\\nicka\\Desktop\\Test",
+            mkvToolNix_path="C:\\Program Files\\MKVToolNix",
+            kinect_pic_rec_extractor=".venv/Lib/site-packages/open3d/examples/reconstruction_system/sensors",
+            create_dg_init_npz="",
+            amount_Subs=baseProxy["SubCount"],
+            marker_length=baseProxy["MarkerLength"],
+            sub_path=baseProxy["SubPath"],
+            create_pcd_json=baseProxy["CreateJSON"],
+            use_charuco=baseProxy["UseCharuco"],
+            icp_itteration=baseProxy["IcpItteration"],
+            amount_pcd_frames=baseProxy["AmountPcdFrames"],
+            pcd_just_center=baseProxy["PcdJustCenter"],
+            create_npzs=baseProxy["CreateNpzs"]
+        )
 
         return proxy
 
