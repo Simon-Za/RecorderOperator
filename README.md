@@ -18,6 +18,7 @@ This project contains a WebSocket server for the network communication of an ope
 2. install and start the WebSocket-Server in chapter [Installation WebSocket-Server](WSS)
 3. install and start operator client in chapter [Installation of Operator UI](operator)
 4. install and start recorder in chapter [Installation of Recorder](recorder)
+5. install and start calibrator in chapter [Installation of Calibrator](calibrator)
 
 ## [Installation WebSocket-Server](WSS)
 1. navigate to the folder of the server ```.\Socket``` via the console ```cd .\Socket\```
@@ -69,3 +70,22 @@ VITE_WEBSOCKET_ADDRESS="ws://<ip-address, where the WebSocket-Server is availabl
 }
 ```
 5. run the project via ```npm run start```
+
+## [Installation of Calibrator](calibrator)
+1. please refer to the base installation of base [calibrator](Calibrator/calibrating/README.md), but please ignore step 9
+2. open the file `Calibrator/__init__.py` and adjust the following variables in lines 57-59:
+
+```python
+proxy.recordings_path = "" #[your own path e.g. C:\Users\User\Desktop\Videos]
+proxy.mkvToolNix_path = "" #[your own path e.g. D:\MKVToolNix]
+proxy.kinect_pic_rec_extractor = "" #.\\venv\\Lib\\site-packages\\open3d\\examples\\reconstruction_system\\sensors
+```
+
+in line 8 change the following:
+```python
+webSocketAdress = "" #[ip-address, where the websocket is hosted]
+```
+
+3. install websockets via: ```pip install websockets```
+4.  install pyee via ```pip install pyee```
+5.  run the __init__.py script: ```python .\src\__init__.py```
