@@ -6,3 +6,4 @@
 	path = Socket/athaeck-websocket-express-base
 [submodule "Calibrator/calibrating"]
 	url = https://github.com/HFU-DM-free3D/calibrating.git
+	path = Calibrator/calibrating
