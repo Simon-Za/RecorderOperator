@@ -2,7 +2,7 @@ import asyncio
 import websockets
 from pyee import AsyncIOEventEmitter
 import json
-from calibrating.src.BaseCalibrator import BaseCalibrator
+from calibrating.src.BaseCalibrator import BaseCalibrator, Proxy
 
 
 webSocketAdress: str = "192.168.178.34"
@@ -52,23 +52,21 @@ class SocketCalibrator(BaseCalibrator):
 
         print(baseProxy)
 
-        proxy = {}
-
-        proxy.recordings_path = "C:\\Users\\nicka\\Desktop\\Test"
-        proxy.mkvToolNix_path = "C:\\Program Files\\MKVToolNix"
-        proxy.kinect_pic_rec_extractor =".\\venv\\Lib\\site-packages\\open3d\\examples\\reconstruction_system\\sensors"
-
-        proxy.create_dg_init_npz =""
-
-        proxy.amount_Subs = baseProxy["SubCount"]
-        proxy.marker_length = baseProxy["MarkerLength"]
-        proxy.sub_path= baseProxy["SubPath"]
-        proxy.create_pcd_json = baseProxy["CreateJSON"]
-        proxy.use_charuco = baseProxy["UseCharuco"]
-        proxy.icp_itteration = baseProxy["IcpItteration"]
-        proxy.amount_pcd_frames = baseProxy["AmountPcdFrames"]
-        proxy.pcd_just_center = baseProxy["PcdJustCenter"]
-        proxy.create_npzs = baseProxy["CreateNpzs"]
+        proxy = Proxy(
+        recordings_path="C:\\Users\\nicka\\Desktop\\Test",
+        mkvToolNix_path="C:\\Program Files\\MKVToolNix",
+        kinect_pic_rec_extractor=".\\venv\\Lib\\site-packages\\open3d\\examples\\reconstruction_system\\sensors",
+        create_dg_init_npz="",
+        amount_Subs=baseProxy["SubCount"],
+        marker_length=baseProxy["MarkerLength"],
+        sub_path=baseProxy["SubPath"],
+        create_pcd_json=baseProxy["CreateJSON"],
+        use_charuco=baseProxy["UseCharuco"],
+        icp_itteration=baseProxy["IcpItteration"],
+        amount_pcd_frames=baseProxy["AmountPcdFrames"],
+        pcd_just_center=baseProxy["PcdJustCenter"],
+        create_npzs=baseProxy["CreateNpzs"]
+    )
 
         return proxy
 
