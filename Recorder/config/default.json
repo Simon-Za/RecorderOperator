@@ -11,7 +11,7 @@
         "baseCommand": ""
     },
     "timer": {
-        "time": "15",
-        "factor": "1000"
+        "time": 7,
+        "factor": 1000
     }
 }

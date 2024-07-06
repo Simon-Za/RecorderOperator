@@ -93,7 +93,7 @@ recorderHooks.SubscribeHookListener("ON_PREPARE_RECORD", (body: any) => {
     ValidateFolder(folderRoute)
 
     const command = baseCommand
-        .replace("{{fileName}}", filePathName)
+        .replace("{{fileName}}", `"${filePathName}"`)
         .replace("{{sdkPath}}", `"${sdkPath}"`)
         .replace("{{folderPath}}", `${folderPath}`)
         .replaceAll("/", "\\");
