@@ -89,4 +89,4 @@ webSocketAdress = "" #[ip-address, where the websocket is hosted]
 
 4. install websockets via: ```pip install websockets```
 5.  install pyee via ```pip install pyee```
-6.  run the __init__.py script: ```python .\src\__init__.py```
+6.  run the __init__.py script: ```python .\__init__.py```
