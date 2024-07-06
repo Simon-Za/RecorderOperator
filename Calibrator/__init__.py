@@ -55,7 +55,7 @@ class SocketCalibrator(BaseCalibrator):
         proxy = Proxy(
         recordings_path="C:\\Users\\nicka\\Desktop\\Test",
         mkvToolNix_path="C:\\Program Files\\MKVToolNix",
-        kinect_pic_rec_extractor=".\\venv\\Lib\\site-packages\\open3d\\examples\\reconstruction_system\\sensors",
+        kinect_pic_rec_extractor=".venv/Lib/site-packages/open3d/examples/reconstruction_system/sensors",
         create_dg_init_npz="",
         amount_Subs=baseProxy["SubCount"],
         marker_length=baseProxy["MarkerLength"],
