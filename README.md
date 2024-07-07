@@ -72,7 +72,7 @@ VITE_WEBSOCKET_ADDRESS="ws://<ip-address, where the WebSocket-Server is availabl
 5. run the project via ```npm run start```
 
 ## [Installation of Calibrator](calibrator)
-1. navigate to the folder of the recorder ```.\Calibrator``` via ``` cd .\Calibrator\```
+1. navigate to the folder of the calibrator ```.\Calibrator``` via ``` cd .\Calibrator\```
 2. please refer to the base installation of base [calibrator](Calibrator/calibrating/README.md), but please ignore step 9
 3. open the file `Calibrator/__init__.py` and adjust the following variables in lines 56-58:
 
