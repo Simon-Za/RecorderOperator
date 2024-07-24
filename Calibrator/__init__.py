@@ -5,7 +5,7 @@ import json
 from calibrating.src.BaseCalibrator import BaseCalibrator, Proxy
 
 
-webSocketAdress: str = "192.168.178.34"
+webSocketAdress: str = ""
 webSocketPort: str = "8080"
 
 
@@ -53,9 +53,9 @@ class SocketCalibrator(BaseCalibrator):
         print(baseProxy)
 
         proxy = Proxy(
-            recordings_path="C:\\Users\\nicka\\Desktop\\Test",
-            mkvToolNix_path="C:\\Program Files\\MKVToolNix",
-            kinect_pic_rec_extractor=".venv/Lib/site-packages/open3d/examples/reconstruction_system/sensors",
+            recordings_path="",
+            mkvToolNix_path="",
+            kinect_pic_rec_extractor="",
             create_dg_init_npz="",
             amount_Subs=baseProxy["SubCount"],
             marker_length=baseProxy["MarkerLength"],

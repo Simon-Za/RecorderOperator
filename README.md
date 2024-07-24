@@ -79,7 +79,7 @@ VITE_WEBSOCKET_ADDRESS="ws://<ip-address, where the WebSocket-Server is availabl
 ```python
 proxy.recordings_path = "" #[your own path e.g. C:\Users\User\Desktop\Videos]
 proxy.mkvToolNix_path = "" #[your own path e.g. D:\MKVToolNix]
-proxy.kinect_pic_rec_extractor = "" #.\\venv\\Lib\\site-packages\\open3d\\examples\\reconstruction_system\\sensors
+proxy.kinect_pic_rec_extractor = "" #.venv\\Lib\\site-packages\\open3d\\examples\\reconstruction_system\\sensors
 ```
 
 in line 8 change the following:
@@ -90,3 +90,14 @@ webSocketAdress = "" #[ip-address, where the websocket is hosted]
 4. install websockets via: ```pip install websockets```
 5.  install pyee via ```pip install pyee```
 6.  run the __init__.py script: ```python .\__init__.py```
+
+
+## Get an overview about the infrastructure
+<figure>
+  <img src="./UML/Hierachy.png" alt="Infrastructure" title="Infrastructure">
+  <figcaption>Figure 1: Infrastructure of this repository and the software of our experimental setup</figcaption>
+</figure>
+
+In order to reproduce our results, it is important to use 3 Azure Kinect cameras. Each of these cameras is connected to a laptop or PC as shown in the container ‘For each kinect’. The recorder will run on this device, which will connect to the websocket server and needs access to a central file system so that the recorded video can be saved on it.
+
+The websocket server, Calibrator and the Operator Client are executed on another laptop or PC. This device also provides the central file system. If all recorders and the calibrator are connected, both the recordings and the calibration can be started centrally via the Operator Client.
