@@ -1,5 +1,5 @@
 # RecorderOperator
-This project contains a WebSocket server for the network communication of an operator UI, the recording receivers and the calibrator.
+This project contains a WebSocket server for the network communication of an operator UI, the recorder and the calibrator.
 
 ## Project Overview
 
