@@ -14,17 +14,17 @@ This project contains a WebSocket server for the network communication of an ope
 - Nvidia RTX 2080 Super
 
 ## How to start the Repo
-1. initialize all submodules via: ```git submodule update --init --recursive```
-2. install and start the WebSocket-Server in chapter [Installation WebSocket-Server](WSS)
-3. install and start operator client in chapter [Installation of Operator UI](operator)
-4. install and start recorder in chapter [Installation of Recorder](recorder)
-5. install and start calibrator in chapter [Installation of Calibrator](calibrator)
+1. Initialize all submodules via: ```git submodule update --init --recursive```
+2. Install and start the WebSocket-Server in chapter [Installation WebSocket-Server](WSS)
+3. Install and start operator client in chapter [Installation of Operator UI](operator)
+4. Install and start recorder in chapter [Installation of Recorder](recorder)
+5. Install and start calibrator in chapter [Installation of Calibrator](calibrator)
 
 ## [Installation WebSocket-Server](WSS)
-1. navigate to the folder of the server ```.\Socket``` via the console ```cd .\Socket\```
-2. install project via ```npm install```
-3. create a ```local.json``` in the folder ```.\Socket\config```
-4. add to the ```local.json``` the following JSON object:
+1. Navigate to the folder of the server ```.\Socket``` via the console ```cd .\Socket\```
+2. Install the project via ```npm install```
+3. Create a ```local.json``` in the folder ```.\Socket\config```
+4. Add to the ```local.json``` the following JSON object:
 ```bash
 {
     "express": {
@@ -33,25 +33,25 @@ This project contains a WebSocket server for the network communication of an ope
     }
 }
 ```
-5. run the project with ```npm run dev```
-6. if the project compiled once, you can use the promt ```npm start```
+5. Run the project with ```npm run dev```
+6. If the project compiled once, you can use the prompt ```npm start```
 
 ## [Installation of Operator UI](operator)
-1. navigate to the folder of the UI (```.\Client\OperatorClient```) : ```cd .\Client\OperatorClient\```
-2. edit ```.env``` with the following line:
+1. Navigate to the folder of the UI (```.\Client\OperatorClient```) : ```cd .\Client\OperatorClient\```
+2. Edit ```.env``` with the following line:
 ```typescript
 VITE_WEBSOCKET_ADDRESS="ws://<ip-address, where the WebSocket-Server is available>:8080"
 ```
-3. install the project via: ```npm install```
-4. install the project via: ```npm run dev```
-5. open the website on ```http://localhost:5173/```
+3. Install the project via: ```npm install```
+4. Install the project via: ```npm run dev```
+5. Open the website on ```http://localhost:5173/```
 
 
 ## [Installation of Recorder](recorder)
-1. navigate to the folder of the recorder ```.\Recorder``` via ``` cd .\Recorder\```
-2. install the project via ```npm install```
-3. create a ```local.json``` in the folder ```.\Recorder\config```
-4. add to the ```local.json``` the following JSON object:
+1. Navigate to the folder of the recorder ```.\Recorder``` via ``` cd .\Recorder\```
+2. Install the project via ```npm install```
+3. Create a ```local.json``` in the folder ```.\Recorder\config```
+4. Add to the ```local.json``` the following JSON object:
 ```bash
 {
     "socket": {
@@ -69,12 +69,12 @@ VITE_WEBSOCKET_ADDRESS="ws://<ip-address, where the WebSocket-Server is availabl
     }
 }
 ```
-5. run the project via ```npm run start```
+5. Run the project via ```npm run start```
 
 ## [Installation of Calibrator](calibrator)
-1. navigate to the folder of the calibrator ```.\Calibrator``` via ``` cd .\Calibrator\```
-2. please refer to the base installation of base [calibrator](Calibrator/calibrating/README.md), but please ignore step 9
-3. open the file `Calibrator/__init__.py` and adjust the following variables in lines 56-58:
+1. Navigate to the folder of the calibrator ```.\Calibrator``` via ``` cd .\Calibrator\```
+2. Please refer to the base installation of base [calibrator](Calibrator/calibrating/README.md), but please ignore step 9
+3. Open the file `Calibrator/__init__.py` and adjust the following variables in lines 56-58:
 
 ```python
 proxy.recordings_path = "" #[your own path e.g. C:\Users\User\Desktop\Videos]
@@ -82,14 +82,14 @@ proxy.mkvToolNix_path = "" #[your own path e.g. D:\MKVToolNix]
 proxy.kinect_pic_rec_extractor = "" #.venv\\Lib\\site-packages\\open3d\\examples\\reconstruction_system\\sensors
 ```
 
-in line 8 change the following:
+In line 8 change the following:
 ```python
 webSocketAdress = "" #[ip-address, where the websocket is hosted]
 ```
 
-4. install websockets via: ```pip install websockets```
-5.  install pyee via ```pip install pyee```
-6.  run the __init__.py script: ```python .\__init__.py```
+4.  Install websockets via: ```pip install websockets```
+5.  Install pyee via ```pip install pyee```
+6.  Run the __init__.py script: ```python .\__init__.py```
 
 
 ## Get an overview about the infrastructure
@@ -98,7 +98,7 @@ webSocketAdress = "" #[ip-address, where the websocket is hosted]
   <figcaption>Figure 1: Physical-Infrastructure of our experimental setup with three Kicect-Cameras</figcaption>
 </figure>
 
-Our small setup was implemented without any kind of DHCP server. We had only four IP addresses to use, so we assigned them manually to the PCs. The PC with the IP address 192.168.10.1 uses the Windows Network Share feature to share a specific folder across the entire network. This allows all other clients to save their Kinect videos in that folder, ensuring that all video files are stored centrally. That folder has to be added as a network folder to all other clients, so its folder path can be used in the code as the path for the recordings of the Kinect cameras.
+Our small setup was implemented without any kind of DHCP server. We only had four IP addresses to use, so we assigned them manually to the PCs. The PC with the IP address 192.168.10.1 uses the Windows Network Share feature to share a specific folder across the entire network. This allows all other clients to save their Kinect videos in that folder, ensuring that all video files are stored centrally. That folder has to be added as a network folder to all other clients, so its folder path can be used in the code as the path for the recordings of the Kinect cameras.
 <figure>
   <img src="./UML/Hierachy.png" alt="Infrastructure" title="Infrastructure">
   <figcaption>Figure 2: Infrastructure of this repository and the software of our experimental setup</figcaption>
