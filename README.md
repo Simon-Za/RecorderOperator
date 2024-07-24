@@ -94,8 +94,12 @@ webSocketAdress = "" #[ip-address, where the websocket is hosted]
 
 ## Get an overview about the infrastructure
 <figure>
+  <img src="./UML/Forschungsprojekt Netzwerkplan.png.png" alt="Physical-Infrastructure" title="Physical-Infrastructure">
+  <figcaption>Figure 1: Physical-Infrastructure of our experimental setup with three Kicect-Cameras</figcaption>
+</figure>
+<figure>
   <img src="./UML/Hierachy.png" alt="Infrastructure" title="Infrastructure">
-  <figcaption>Figure 1: Infrastructure of this repository and the software of our experimental setup</figcaption>
+  <figcaption>Figure 2: Infrastructure of this repository and the software of our experimental setup</figcaption>
 </figure>
 
 In order to reproduce our results, it is important to use 3 Azure Kinect cameras. Each of these cameras is connected to a laptop or PC as shown in the container ‘For each kinect’. The recorder will run on this device, which will connect to the websocket server and needs access to a central file system so that the recorded video can be saved on it.
