@@ -94,7 +94,7 @@ webSocketAdress = "" #[ip-address, where the websocket is hosted]
 
 ## Get an overview about the infrastructure
 <figure>
-  <img src="./UML/Forschungsprojekt_Netzwerkplan.png" alt="Physical-Infrastructure" title="Physical-Infrastructure">
+  <img src="./UML/physical-infrastructure.png" alt="Physical-Infrastructure" title="Physical-Infrastructure">
   <figcaption>Figure 1: Physical-Infrastructure of our experimental setup with three Kicect-Cameras</figcaption>
 </figure>
 <figure>
