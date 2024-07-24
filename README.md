@@ -101,3 +101,7 @@ webSocketAdress = "" #[ip-address, where the websocket is hosted]
 In order to reproduce our results, it is important to use 3 Azure Kinect cameras. Each of these cameras is connected to a laptop or PC as shown in the container ‘For each kinect’. The recorder will run on this device, which will connect to the websocket server and needs access to a central file system so that the recorded video can be saved on it.
 
 The websocket server, Calibrator and the Operator Client are executed on another laptop or PC. This device also provides the central file system. If all recorders and the calibrator are connected, both the recordings and the calibration can be started centrally via the Operator Client.
+
+
+## Sources
+Image of the Kinect from figure 1: https://pbs.twimg.com/media/EgOwJS6U8AAjqu5.png
