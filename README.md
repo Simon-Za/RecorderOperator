@@ -98,7 +98,7 @@ webSocketAdress = "" #[ip-address, where the websocket is hosted]
   <figcaption>Figure 1: Physical-Infrastructure of our experimental setup with three Kicect-Cameras</figcaption>
 </figure>
 
-Our small setup was implemented without any kind of DHCP server. We had only four IP addresses to use, so we assigned them manually to the PCs. The PC with the IP address 192.168.10.1 uses the Windows Network Share feature to share a specific folder across the entire network. This allows all other clients to save their Kinect videos in that folder, ensuring that all video files are stored centrally.
+Our small setup was implemented without any kind of DHCP server. We had only four IP addresses to use, so we assigned them manually to the PCs. The PC with the IP address 192.168.10.1 uses the Windows Network Share feature to share a specific folder across the entire network. This allows all other clients to save their Kinect videos in that folder, ensuring that all video files are stored centrally. That folder has to be added as a network folder to all other clients, so its folder path can be used in the code as the path for the recordings of the Kinect cameras.
 <figure>
   <img src="./UML/Hierachy.png" alt="Infrastructure" title="Infrastructure">
   <figcaption>Figure 2: Infrastructure of this repository and the software of our experimental setup</figcaption>
